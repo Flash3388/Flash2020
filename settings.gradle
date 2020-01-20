@@ -1,0 +1,28 @@
+import org.gradle.internal.os.OperatingSystem
+
+pluginManagement {
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+
+        String frcYear = '2020'
+
+        File frcHome
+        if (OperatingSystem.current().isWindows()) {
+            String publicFolder = System.getenv('PUBLIC')
+            if (publicFolder == null) {
+                publicFolder = "C:\\Users\\Public"
+            }
+            frcHome = new File(publicFolder, "wpilib/${frcYear}")
+        } else {
+            def userFolder = System.getProperty("user.home")
+            frcHome = new File(userFolder, "wpilib/${frcYear}")
+        }
+
+        def frcHomeMaven = new File(frcHome, 'maven')
+        maven {
+            name 'frcHome'
+            url frcHomeMaven
+        }
+    }
+}
