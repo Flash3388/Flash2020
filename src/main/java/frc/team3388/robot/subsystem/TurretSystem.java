@@ -2,14 +2,18 @@ package frc.team3388.robot.subsystem;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.flash3388.flashlib.robot.scheduling.Subsystem;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class TurretSystem extends Subsystem {
     private static final double SPEED = 0.3;
-    private WPI_TalonSRX mController;
+    private SpeedController mController;
+    private Gyro mGyro;
 
-    public TurretSystem(WPI_TalonSRX controller)
+    public TurretSystem(SpeedController controller, Gyro gyro)
     {
         mController = controller;
+        mGyro = gyro;
     }
 
     public void turnRight()
@@ -20,6 +24,11 @@ public class TurretSystem extends Subsystem {
     public void turnLeft()
     {
         mController.set(SPEED * -1);
+    }
+
+    public double getAngle()
+    {
+        return mGyro.getAngle();
     }
 
     public void stop()
