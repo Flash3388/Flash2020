@@ -21,11 +21,18 @@ public class TurretRotateToAngle extends Action {
     }
 
     @Override
-    protected void execute() {
-        double mCurrentAngle = mTurretSystem.getAngle();
+    protected void initialize() {
+        isFinished = false;
+    }
 
-        if (mCurrentAngle == mAngle)
+    @Override
+    protected void execute() {
+        double currentAngle = mTurretSystem.getAngle();
+
+        if (currentAngle == mAngle) {
             isFinished = true;
+            return;
+        }
 
         boolean isNegative = (mAngle < 0);
 
