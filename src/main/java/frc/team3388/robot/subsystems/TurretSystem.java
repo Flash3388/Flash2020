@@ -1,6 +1,5 @@
-package frc.team3388.robot.subsystem;
+package frc.team3388.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.flash3388.flashlib.robot.scheduling.Subsystem;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.interfaces.Gyro;

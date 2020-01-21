@@ -1,0 +1,24 @@
+package frc.team3388.robot.actions.turret;
+
+import com.flash3388.flashlib.robot.scheduling.actions.Action;
+import frc.team3388.robot.subsystems.TurretSystem;
+
+public class TurretRotateLeft extends Action {
+    private TurretSystem mTurretSystem;
+
+    public TurretRotateLeft(TurretSystem turretSystem)
+    {
+        mTurretSystem = turretSystem;
+        requires(mTurretSystem);
+    }
+
+    @Override
+    protected void execute() {
+        mTurretSystem.turnLeft();
+    }
+
+    @Override
+    protected void end() {
+        mTurretSystem.stop();
+    }
+}
