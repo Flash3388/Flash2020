@@ -34,6 +34,12 @@ public class TurretRotateToAngle extends Action {
             return;
         }
 
+        if (currentAngle <= -90 || currentAngle >= 90)
+        {
+            isFinished = true;
+            return;
+        }
+
         boolean isNegative = (mAngle < 0);
 
         if (isNegative)
