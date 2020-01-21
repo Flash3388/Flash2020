@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class TurretSystem extends Subsystem {
-    private static final double SPEED = 0.3;
+    private static final double SPEED = 0.1;
     private static final double MAX_LEFT_ANGLE = -90;
     private static final double MAX_RIGHT_ANGLE = 90;
 
