@@ -5,6 +5,7 @@ import frc.team3388.robot.subsystems.TurretSystem;
 
 public class TurretRotateRight extends Action {
     private TurretSystem mTurretSystem;
+    private boolean isFinished = false;
 
     public TurretRotateRight(TurretSystem turretSystem)
     {
@@ -13,7 +14,24 @@ public class TurretRotateRight extends Action {
     }
 
     @Override
+    public boolean isFinished() {
+        return isFinished;
+    }
+
+    @Override
+    protected void initialize() {
+        isFinished = false;
+    }
+
+    @Override
     protected void execute() {
+
+        if (!mTurretSystem.canRotate())
+        {
+            isFinished = true;
+            return;
+        }
+
         mTurretSystem.turnRight();
     }
 

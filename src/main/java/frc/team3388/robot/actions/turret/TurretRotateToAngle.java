@@ -34,7 +34,7 @@ public class TurretRotateToAngle extends Action {
             return;
         }
 
-        if (currentAngle <= -90 || currentAngle >= 90)
+        if (!mTurretSystem.canRotate())
         {
             isFinished = true;
             return;
