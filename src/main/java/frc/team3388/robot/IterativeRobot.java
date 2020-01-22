@@ -23,8 +23,13 @@ public class IterativeRobot implements IterativeRobotInterface {
         left = new Joystick(RobotMap.LEFT_JOYSTICK_CHANNEL);
         WPI_TalonSRX frontright = new WPI_TalonSRX(RobotMap.FRONT_RIGHT_MOTOR);
         WPI_TalonSRX rearright = new WPI_TalonSRX(RobotMap.REAR_RIGHT_MOTOR);
+
         WPI_TalonSRX rearleft = new WPI_TalonSRX(RobotMap.REAR_LEFT_MOTOR);
         WPI_TalonSRX frontleft = new WPI_TalonSRX(RobotMap.FRONT_LEFT_MOTOR);
+        frontleft.setInverted(false);
+        rearleft.setInverted(true);
+        frontright.setInverted(true);
+        rearright.setInverted(true);
         EncoderSrx encoderRight = new EncoderSrx(frontright,true);
         EncoderSrx encoderLeft = new EncoderSrx(rearleft,true);
         Gyro gyro = new ADXRS450_Gyro();

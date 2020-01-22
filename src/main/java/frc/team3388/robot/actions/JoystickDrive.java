@@ -18,7 +18,13 @@ public class JoystickDrive extends Action {
 
     @Override
     protected void execute() {
-        driveSystem.tankDrive(-right.getAxis(JoystickAxis.Y).getAsDouble(),-left.getAxis(JoystickAxis.Y).getAsDouble());
+        double rightAxis=-right.getAxis(JoystickAxis.Y).getAsDouble();
+        double leftAxis=-left.getAxis(JoystickAxis.Y).getAsDouble();
+        if (Math.abs(rightAxis)<0.2)
+            rightAxis=0;
+        if (Math.abs(leftAxis)<0.2)
+            leftAxis=0;
+        driveSystem.tankDrive(rightAxis,leftAxis);
     }
 
     @Override
