@@ -20,4 +20,14 @@ public class Shooter extends Subsystem {
     {
         speedController.set(0);
     }
+
+    public void addLid()
+    {
+
+    }
+
+    public void removeLid()
+    {
+
+    }
 }
