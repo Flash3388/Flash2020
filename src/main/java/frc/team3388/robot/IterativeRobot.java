@@ -31,7 +31,8 @@ public class IterativeRobot implements IterativeRobotInterface {
         mRobot = robot;
         driveSystem = new DriveSystem(new SpeedControllerGroup(new FrcSpeedController(frontright), new FrcSpeedController(rearright)),
                 new SpeedControllerGroup(new FrcSpeedController(rearleft), new FrcSpeedController(frontleft)), gyro, encoderRight, encoderLeft);
-        JoystickDrive joystickDrive = new JoystickDrive(driveSystem, right, left);
+        driveSystem.setDefaultAction(new JoystickDrive(driveSystem, right, left));
+
     }
 
     @Override
@@ -45,7 +46,6 @@ public class IterativeRobot implements IterativeRobotInterface {
 
     @Override
     public void teleopInit() {
-
     }
 
     @Override
