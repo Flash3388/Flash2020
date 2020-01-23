@@ -5,16 +5,18 @@ import frc.team3388.robot.subsystems.Shooter;
 
 public class ShootShooter extends Action {
     private Shooter shooter;
+    private double speed;
 
-    public ShootShooter(Shooter shooter)
+    public ShootShooter(Shooter shooter, double speed)
     {
         this.shooter = shooter;
+        this.speed = speed;
         requires(this.shooter);
     }
 
     @Override
     protected void execute() {
-        shooter.shoot();
+        shooter.shoot(speed);
     }
 
     @Override
