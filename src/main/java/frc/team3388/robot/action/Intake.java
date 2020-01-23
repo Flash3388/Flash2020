@@ -1,7 +1,6 @@
 package frc.team3388.robot.action;
 
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
-import com.flash3388.flashlib.robot.scheduling.actions.InstantAction;
 import frc.team3388.robot.IntakeSystem;
 
 public class Intake extends Action

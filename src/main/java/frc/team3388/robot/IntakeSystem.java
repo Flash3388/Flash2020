@@ -15,6 +15,9 @@ public class IntakeSystem extends Subsystem {
         this.piston = piston;
         this.piston1 = piston1;
     }
+
+
+
     public void in() {
         controller.set(SPEED);
     }
