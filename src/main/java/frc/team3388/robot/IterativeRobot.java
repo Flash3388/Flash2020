@@ -16,11 +16,8 @@ public class IterativeRobot implements IterativeRobotInterface {
 
     public IterativeRobot(Robot robot) {
         mRobot = robot;
-        mMagazineSystem = new MagazineSystem(new WPI_TalonSRX(RobotMap.MAGAZINE_FIRST_CONTROLLER), new WPI_TalonSRX(RobotMap.MAGAZINE_SECOND_CONTROLLER), new DigitalInput(RobotMap.MAGAZINE_DIGITAL_INPUT)
-                , new DoubleSolenoid(RobotMap.MAGAZINE_DS_1,RobotMap.MAGAZINE_DS_2));
-
-        Triggers.onCondition(()->mMagazineSystem.isHigh())
-                .whileActive(new MoveMagazine(mMagazineSystem));
+        mMagazineSystem = new MagazineSystem(new WPI_TalonSRX(RobotMap.MAGAZINE_FIRST_CONTROLLER), new WPI_TalonSRX(RobotMap.MAGAZINE_SECOND_CONTROLLER),
+                new DoubleSolenoid(RobotMap.MAGAZINE_DS_1,RobotMap.MAGAZINE_DS_2));
     }
 
     @Override
