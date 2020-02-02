@@ -1,10 +1,7 @@
-package frc.team3388.subsystems;
+package frc.team3388.subsystems.vision;
 
 import com.flash3388.flashlib.robot.scheduling.Subsystem;
 import com.flash3388.flashlib.time.Time;
-import frc.team3388.Frame;
-import frc.team3388.NetworkDoubleSupplier;
-import frc.team3388.NetworkIntSupplier;
 
 public class VisionSystem extends Subsystem {
     private static final String VISION_TABLE_NAME = "vision_table";
@@ -32,9 +29,5 @@ public class VisionSystem extends Subsystem {
 
     public Time timestamp() {
         return Time.milliseconds(timestampMillisecondsSupplier.getAsInt());
-    }
-
-    public Frame frame() {
-        return new Frame(alignmentError(), distance(), timestamp());
     }
 }

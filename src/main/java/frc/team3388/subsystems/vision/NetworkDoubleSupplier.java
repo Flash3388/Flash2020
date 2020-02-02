@@ -1,22 +1,22 @@
-package frc.team3388;
+package frc.team3388.subsystems.vision;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
-import java.util.function.IntSupplier;
+import java.util.function.DoubleSupplier;
 
-public class NetworkIntSupplier implements IntSupplier {
+public class NetworkDoubleSupplier implements DoubleSupplier {
     private final NetworkTableEntry entry;
-    private final int defaultValue;
+    private final double defaultValue;
 
-    public NetworkIntSupplier(String tableName, String entryName, int defaultValue) {
+    public NetworkDoubleSupplier(String tableName, String entryName, double defaultValue) {
         this.defaultValue = defaultValue;
         entry = NetworkTableInstance.getDefault().getTable(tableName).getEntry(entryName);
         entry.setDouble(defaultValue);
     }
 
     @Override
-    public int getAsInt() {
-        return (int) entry.getDouble(defaultValue);
+    public double getAsDouble() {
+        return entry.getDouble(defaultValue);
     }
 }
