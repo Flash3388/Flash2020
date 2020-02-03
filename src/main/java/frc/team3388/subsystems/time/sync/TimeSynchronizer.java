@@ -1,4 +1,4 @@
-package frc.team3388.time;
+package frc.team3388.subsystems.time.sync;
 
 import com.flash3388.flashlib.robot.scheduling.actions.InstantAction;
 import com.flash3388.flashlib.robot.scheduling.triggers.Trigger;
@@ -7,19 +7,19 @@ import com.flash3388.flashlib.time.Clock;
 
 public class TimeSynchronizer {
     public static void sync(Clock clock) {
-        sync(SyncMethod.standard(clock));
+        sync(SyncSystem.standard(clock));
     }
 
-    public static void sync(SyncMethod syncMethod) {
+    public static void sync(SyncSystem syncSystem) {
         Trigger syncTrigger = new Trigger(TriggerState.ACTIVE);
-        syncTrigger.addToScheduler(syncMethod::shouldSync);
+        syncTrigger.addToScheduler(syncSystem::shouldSync);
         syncTrigger.whenActive(new InstantAction() {
             @Override
             protected void execute() {
-                syncMethod.setFirst();
-                syncMethod.setSecond();
+                syncSystem.setFirst();
+                syncSystem.setSecond();
                 syncTrigger.deactivate();
-                syncMethod.unSync();
+                syncSystem.unSync();
             }
         });
     }
