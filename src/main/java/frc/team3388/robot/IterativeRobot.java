@@ -13,12 +13,7 @@ public class IterativeRobot implements IterativeRobotInterface {
 
     public IterativeRobot(Robot robot) {
         mRobot = robot;
-
-        WPI_TalonSRX speedController = new WPI_TalonSRX(RobotMap.SHOOTER_CONTROLLER);
-
-        DoubleSolenoid doubleSolenoid = new DoubleSolenoid(RobotMap.DOUBLE_SOLENOID_1, RobotMap.DOUBLE_SOLENOID_2);
-        EncoderSrx encoderSrx = new EncoderSrx(speedController, false);
-        shooter = new Shooter(speedController, doubleSolenoid, encoderSrx);
+        shooter = Shooter.standard();
     }
 
     @Override
