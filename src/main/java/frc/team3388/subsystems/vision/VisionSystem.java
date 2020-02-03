@@ -13,10 +13,17 @@ public class VisionSystem extends Subsystem {
     private final NetworkDoubleSupplier distanceSupplier;
     private final NetworkIntSupplier timestampMillisecondsSupplier;
 
-    public VisionSystem() {
-        alignmentErrorSupplier = new NetworkDoubleSupplier(VISION_TABLE_NAME, ALIGNMENT_ERROR_ENTRY_NAME, 0);
-        distanceSupplier = new NetworkDoubleSupplier(VISION_TABLE_NAME, DISTANCE_ENTRY_NAME, -1);
-        timestampMillisecondsSupplier = new NetworkIntSupplier(VISION_TABLE_NAME, TIMESTAMP_ENTRY_NAME, -1);
+    public VisionSystem(NetworkDoubleSupplier alignmentErrorSupplier, NetworkDoubleSupplier distanceSupplier, NetworkIntSupplier timestampMillisecondsSupplier) {
+        this.alignmentErrorSupplier = alignmentErrorSupplier;
+        this.distanceSupplier = distanceSupplier;
+        this.timestampMillisecondsSupplier = timestampMillisecondsSupplier;
+    }
+
+    public static VisionSystem standard() {
+        NetworkDoubleSupplier alignmentErrorSupplier = new NetworkDoubleSupplier(VISION_TABLE_NAME, ALIGNMENT_ERROR_ENTRY_NAME, 0);
+        NetworkDoubleSupplier distanceSupplier = new NetworkDoubleSupplier(VISION_TABLE_NAME, DISTANCE_ENTRY_NAME, -1);
+        NetworkIntSupplier timestampMillisecondsSupplier = new NetworkIntSupplier(VISION_TABLE_NAME, TIMESTAMP_ENTRY_NAME, -1);
+        return new VisionSystem(alignmentErrorSupplier, distanceSupplier, timestampMillisecondsSupplier);
     }
 
     public double alignmentError() {
