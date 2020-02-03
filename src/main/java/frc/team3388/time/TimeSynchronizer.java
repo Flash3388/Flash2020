@@ -19,6 +19,7 @@ public class TimeSynchronizer {
                 syncMethod.setFirst();
                 syncMethod.setSecond();
                 syncTrigger.deactivate();
+                syncMethod.unSync();
             }
         });
     }

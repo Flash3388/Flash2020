@@ -43,4 +43,8 @@ public class SyncMethod {
     public void setSecond() {
         secondTimestampEntry.setDouble(clock.currentTime().valueAsMillis());
     }
+
+    public void unSync() {
+        syncEntry.setBoolean(false);
+    }
 }
