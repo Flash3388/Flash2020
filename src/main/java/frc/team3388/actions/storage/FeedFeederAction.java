@@ -1,19 +1,16 @@
-package frc.team3388.actions.magazine;
+package frc.team3388.actions.storage;
 
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
+import frc.team3388.subsystems.ShooterFeederSystem;
 import frc.team3388.subsystems.StorageSystem;
 
-public class AddBallToStorageAction extends Action {
-    private StorageSystem storageSystem;
+public class FeedFeederAction extends Action {
+    private final StorageSystem storageSystem;
+    private final ShooterFeederSystem feeder;
 
-    public AddBallToStorageAction(StorageSystem storageSystem) {
+    public FeedFeederAction(StorageSystem storageSystem, ShooterFeederSystem feeder) {
         this.storageSystem = storageSystem;
-        requires(storageSystem);
-    }
-
-    @Override
-    protected void initialize() {
-        storageSystem.addBall();
+        this.feeder = feeder;
     }
 
     @Override
@@ -28,6 +25,6 @@ public class AddBallToStorageAction extends Action {
 
     @Override
     protected boolean isFinished() {
-        return storageSystem.isFull();
+        return feeder.hasBall();
     }
 }

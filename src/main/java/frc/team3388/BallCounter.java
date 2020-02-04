@@ -9,15 +9,19 @@ public class BallCounter {
         counter = 0;
     }
 
-    public int add() {
-        return counter++;
+    public void add() {
+        counter++;
     }
 
-    public int remove() {
-        return counter <= 1 ? 0: counter--;
+    public void remove() {
+        counter = counter <= 1 ? 0: counter--;
     }
 
     public boolean isFull() {
         return counter >= size;
+    }
+
+    public boolean isEmpty() {
+        return counter == 0;
     }
 }
