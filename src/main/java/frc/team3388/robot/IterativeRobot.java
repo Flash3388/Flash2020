@@ -1,19 +1,17 @@
 package frc.team3388.robot;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.flash3388.flashlib.frc.robot.IterativeRobotInterface;
 import com.flash3388.flashlib.robot.Robot;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import frc.team3388.robot.subsystems.Shooter;
+import frc.team3388.robot.subsystems.ShooterSystem;
 
 public class IterativeRobot implements IterativeRobotInterface {
 
     private final Robot mRobot;
-    private final Shooter shooter;
+    private final ShooterSystem shooter;
 
     public IterativeRobot(Robot robot) {
         mRobot = robot;
-        shooter = Shooter.standard();
+        shooter = ShooterSystem.standard();
     }
 
     @Override

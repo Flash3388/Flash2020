@@ -1,13 +1,13 @@
 package frc.team3388.robot.actions.shooter;
 
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
-import frc.team3388.robot.subsystems.Shooter;
+import frc.team3388.robot.subsystems.ShooterSystem;
 
 public class ShootAction extends Action {
-    private final Shooter shooter;
+    private final ShooterSystem shooter;
     private final double rpm;
 
-    public ShootAction(Shooter shooter, double rpm) {
+    public ShootAction(ShooterSystem shooter, double rpm) {
         this.shooter = shooter;
         this.rpm = rpm;
 
