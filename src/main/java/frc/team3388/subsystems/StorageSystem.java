@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.SpeedController;
 
 public class StorageSystem extends Subsystem {
     private static final int CONTROLLER_PORT = 1;
-    private static final int ENTRY_SENSOR_PORT = 0;
     private static final double SPEED = -0.4;
     private final SpeedController controller;
 
@@ -14,7 +13,7 @@ public class StorageSystem extends Subsystem {
         this.controller = controller;
     }
 
-    public static StorageSystem forRobot(BallCounter counter) {
+    public static StorageSystem forRobot() {
         return new StorageSystem(new WPI_VictorSPX(CONTROLLER_PORT));
     }
 

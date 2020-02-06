@@ -1,6 +1,7 @@
 package frc.team3388.subsystems;
 
 import com.flash3388.flashlib.robot.scheduling.Subsystem;
+import com.flash3388.flashlib.robot.scheduling.actions.Actions;
 import com.flash3388.flashlib.robot.scheduling.actions.InstantAction;
 import com.flash3388.flashlib.robot.scheduling.triggers.Trigger;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -58,21 +59,11 @@ public class BallCountingSystem extends Subsystem {
     }
 
     private void setAdditionAction() {
-        additionTrigger.whenActive(new InstantAction() {
-            @Override
-            protected void execute() {
-                counter += counter >= maxBalls ? 0 : 1;
-            }
-        });
+        Actions.instantAction(() -> counter += counter >= maxBalls ? 0 : 1);
     }
 
     private void setRemovalAction() {
-        additionTrigger.whenActive(new InstantAction() {
-            @Override
-            protected void execute() {
-                counter -= counter <= 0 ? 0 : 1;
-            }
-        });
+        Actions.instantAction(() -> counter -= counter <= 0 ? 0 : 1);
     }
 
     private void addAdditionToScheduler() {
