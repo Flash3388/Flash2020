@@ -1,4 +1,4 @@
-package frc.team3388.actions.storage;
+package frc.team3388.actions;
 
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import frc.team3388.subsystems.ShooterFeederSystem;
@@ -12,11 +12,6 @@ public class FeedShooterAction extends Action {
     }
 
     @Override
-    protected void initialize() {
-        feeder.removeBall();
-    }
-
-    @Override
     protected void execute() {
         feeder.feed();
     }
@@ -24,10 +19,5 @@ public class FeedShooterAction extends Action {
     @Override
     protected void end() {
         feeder.stop();
-    }
-
-    @Override
-    protected boolean isFinished() {
-        return !feeder.hasBall() && feeder.isEmpty();
     }
 }
