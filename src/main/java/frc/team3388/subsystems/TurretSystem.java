@@ -1,4 +1,4 @@
-package frc.team3388.actions.subsystems;
+package frc.team3388.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.flash3388.flashlib.robot.control.PidController;
@@ -6,22 +6,24 @@ import com.flash3388.flashlib.robot.motion.Rotatable;
 import com.flash3388.flashlib.robot.scheduling.Subsystem;
 import com.jmath.ExtendedMath;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+import frc.team3388.SrxEncoder;
 
 public class TurretSystem extends Subsystem implements Rotatable {
     private static final int CONTROLLER_PORT = 3;
     private static final double DEFAULT_MAX_ANGLE = 360;
+    private static final int LARGE_GEAR_TOOTH_COUNT = 100;
+    private static final int LITTLE_GEAR_TOOTH_COUNT = 10;
     private static final double SPEED = 0.1;
 
     private final SpeedController controller;
     private final PidController pidController;
-    private final Gyro encoder;
+    private final SrxEncoder encoder;
     private final double maxAngle;
 
-    public TurretSystem(SpeedController controller, PidController pidController, Gyro gyro, double maxAngle) {
+    public TurretSystem(SpeedController controller, PidController pidController, SrxEncoder encoder, double maxAngle) {
         this.controller = controller;
         this.pidController = pidController;
-        this.encoder = gyro;
+        this.encoder = encoder;
         this.maxAngle = maxAngle;
     }
 
@@ -30,7 +32,11 @@ public class TurretSystem extends Subsystem implements Rotatable {
         final double kI = 0;
         final double kD = 0;
 
-        return new TurretSystem(new WPI_TalonSRX(CONTROLLER_PORT), new PidController(kP, kI, kD, 0), null, DEFAULT_MAX_ANGLE);
+        PidController pidController = new PidController(kP, kI, kD, 0);
+        WPI_TalonSRX talon = new WPI_TalonSRX(CONTROLLER_PORT);
+        SrxEncoder encoder = new SrxEncoder(CONTROLLER_PORT, LITTLE_GEAR_TOOTH_COUNT/(double)LARGE_GEAR_TOOTH_COUNT);
+
+        return new TurretSystem(talon, pidController, encoder, DEFAULT_MAX_ANGLE);
     }
 
     public void turnRight() {
@@ -42,7 +48,7 @@ public class TurretSystem extends Subsystem implements Rotatable {
     }
 
     public double getAngle() {
-        return encoder.getAngle();
+        return encoder.getAsDouble();
     }
 
     public void rotateTo(double target) {
