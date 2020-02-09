@@ -19,7 +19,7 @@ public class VisionSystem extends Subsystem {
         this.timestampMillisecondsSupplier = timestampMillisecondsSupplier;
     }
 
-    public static VisionSystem standard() {
+    public static VisionSystem forRobot() {
         NetworkDoubleSupplier alignmentErrorSupplier = new NetworkDoubleSupplier(VISION_TABLE_NAME, ALIGNMENT_ERROR_ENTRY_NAME, 0);
         NetworkDoubleSupplier distanceSupplier = new NetworkDoubleSupplier(VISION_TABLE_NAME, DISTANCE_ENTRY_NAME, -1);
         NetworkIntSupplier timestampMillisecondsSupplier = new NetworkIntSupplier(VISION_TABLE_NAME, TIMESTAMP_ENTRY_NAME, -1);
