@@ -6,7 +6,7 @@ import frc.team3388.actions.ActionFactory;
 
 public class TimeSynchronizer {
     public static void sync(Clock clock) {
-        sync(SyncSystem.standard(clock));
+        sync(SyncSystem.forRobot(clock));
     }
 
     public static void sync(SyncSystem syncSystem) {

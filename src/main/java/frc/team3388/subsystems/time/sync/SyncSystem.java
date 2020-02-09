@@ -28,7 +28,7 @@ public class SyncSystem extends Subsystem {
         secondTimestampEntry.setDouble(-1);
     }
 
-    public static SyncSystem standard(Clock clock) {
+    public static SyncSystem forRobot(Clock clock) {
         NetworkTable syncTable = NetworkTableInstance.getDefault().getTable(SYNC_TABLE_NAME);
         return new SyncSystem(syncTable.getEntry(SYNC_ENTRY_NAME), syncTable.getEntry(FIRST_TIMESTAMP_ENTRY_NAME), syncTable.getEntry(SECOND_TIMESTAMP_ENTRY_NAME), clock);
     }
