@@ -8,7 +8,8 @@ public class ActionFactory {
     public static Action intakeAction(IntakeSystem intakeSystem) {
         return Actions.sequential(
                 Actions.runnableAction(intakeSystem::intake),
-                Actions.instantAction(intakeSystem::stop)).requires(intakeSystem);
+                Actions.instantAction(intakeSystem::stop)
+        ).requires(intakeSystem);
     }
 
     public static Action unfoldIntakeAction(IntakeSystem intakeSystem) {
@@ -22,6 +23,7 @@ public class ActionFactory {
     public static Action engageIntakeAction(IntakeSystem intakeSystem) {
         return Actions.sequential(
                 unfoldIntakeAction(intakeSystem),
-                intakeAction(intakeSystem)).requires(intakeSystem);
+                intakeAction(intakeSystem)
+        ).requires(intakeSystem);
     }
 }
