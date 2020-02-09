@@ -47,9 +47,4 @@ public class IntakeSystem extends Subsystem {
         leftPiston.open();
         rightPiston.open();
     }
-
-    public void toggleFold() {
-        leftPiston.toggle();
-        rightPiston.toggle();
-    }
 }
