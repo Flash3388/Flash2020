@@ -10,7 +10,8 @@ public class ActionFactory {
     public static Action keepTurretAtAngle(TurretSystem turretSystem, DoubleSupplier targetSupplier) {
         return Actions.sequential(
                 Actions.instantAction(turretSystem::resetPidController),
-                Actions.runnableAction(() -> turretSystem.rotateTo(targetSupplier.getAsDouble()))).requires(turretSystem);
+                Actions.runnableAction(() -> turretSystem.rotateTo(targetSupplier.getAsDouble()))
+        ).requires(turretSystem);
     }
 
     public static Action manualTurretRotateAction(TurretSystem turretSystem, DoubleSupplier rotateValueSupplier) {
@@ -22,6 +23,7 @@ public class ActionFactory {
         return Actions.conditional(() -> turretSystem.hasReachedTarget(target),
                 Actions.sequential(
                         Actions.runnableAction(() -> turretSystem.rotateTo(target)),
-                        Actions.instantAction(turretSystem::stop))).requires(turretSystem);
+                        Actions.instantAction(turretSystem::stop))
+        ).requires(turretSystem);
     }
 }
