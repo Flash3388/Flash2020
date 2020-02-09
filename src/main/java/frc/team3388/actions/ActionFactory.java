@@ -2,9 +2,9 @@ package frc.team3388.actions;
 
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import com.flash3388.flashlib.robot.scheduling.actions.Actions;
-import frc.team3388.subsystems.BallCountingSystem;
-import frc.team3388.subsystems.ShooterFeederSystem;
-import frc.team3388.subsystems.StorageSystem;
+import frc.team3388.subsystems.storage.BallCountingSystem;
+import frc.team3388.subsystems.storage.ShooterFeederSystem;
+import frc.team3388.subsystems.storage.StorageSystem;
 
 public class ActionFactory {
     public static Action feedShooterAction(ShooterFeederSystem feederSystem) {

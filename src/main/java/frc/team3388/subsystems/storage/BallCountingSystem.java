@@ -1,8 +1,7 @@
-package frc.team3388.subsystems;
+package frc.team3388.subsystems.storage;
 
 import com.flash3388.flashlib.robot.scheduling.Subsystem;
 import com.flash3388.flashlib.robot.scheduling.actions.Actions;
-import com.flash3388.flashlib.robot.scheduling.actions.InstantAction;
 import com.flash3388.flashlib.robot.scheduling.triggers.Trigger;
 import edu.wpi.first.wpilibj.DigitalInput;
 

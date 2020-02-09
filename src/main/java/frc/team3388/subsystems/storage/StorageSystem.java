@@ -1,4 +1,4 @@
-package frc.team3388.subsystems;
+package frc.team3388.subsystems.storage;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.flash3388.flashlib.robot.scheduling.Subsystem;
