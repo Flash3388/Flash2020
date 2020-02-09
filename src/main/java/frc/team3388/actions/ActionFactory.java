@@ -15,14 +15,6 @@ public class ActionFactory {
         ).requires(turretSystem);
     }
 
-    public static Action manualTurretRotateAction(TurretSystem turretSystem, DoubleSupplier rotateValueSupplier) {
-        final double TURRET_ROTATE_MODIFIER = 0.5;
-        return Actions.sequential(
-                Actions.runnableAction(() -> turretSystem.rotate(rotateValueSupplier.getAsDouble() * TURRET_ROTATE_MODIFIER)),
-                Actions.instantAction(turretSystem::stop)
-        ).requires(turretSystem);
-    }
-
     public static Action roughTurretRotateAction(TurretSystem turretSystem, double target) {
         return Actions.conditional(() -> turretSystem.hasReachedTarget(target),
                 Actions.sequential(
