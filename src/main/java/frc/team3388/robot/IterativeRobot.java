@@ -4,11 +4,10 @@ import com.flash3388.flashlib.frc.robot.IterativeRobotInterface;
 import com.flash3388.flashlib.robot.Robot;
 
 public class IterativeRobot implements IterativeRobotInterface {
-
-    private final Robot mRobot;
+    private final Robot robot;
 
     public IterativeRobot(Robot robot) {
-        mRobot = robot;
+        this.robot = robot;
     }
 
     @Override
