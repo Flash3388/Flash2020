@@ -14,6 +14,7 @@ public class TurretSystem extends Subsystem implements Rotatable {
     private static final int LARGE_GEAR_TOOTH_COUNT = 100;
     private static final int LITTLE_GEAR_TOOTH_COUNT = 10;
     private static final double PID_LIMIT = 0.4;
+    private static final double DEFAULT_DELTA = 0.5;
 
     private final SpeedController controller;
     private final PidController pidController;
@@ -45,12 +46,12 @@ public class TurretSystem extends Subsystem implements Rotatable {
         pidController.reset();
     }
 
-    public double getAngle() {
+    public double angle() {
         return encoder.getAsDouble();
     }
 
     public void rotateTo(double target) {
-        rotate(pidController.calculate(getAngle(), target));
+        rotate(pidController.calculate(angle(), target));
     }
 
     @Override
@@ -64,7 +65,11 @@ public class TurretSystem extends Subsystem implements Rotatable {
         controller.stopMotor();
     }
 
+    public boolean hasReachedTarget(double target) {
+        return ExtendedMath.equals(angle(), target, DEFAULT_DELTA);
+    }
+
     private boolean canRotate() {
-        return ExtendedMath.constrained(getAngle(), -maxAngle, maxAngle);
+        return ExtendedMath.constrained(angle(), -maxAngle, maxAngle);
     }
 }
