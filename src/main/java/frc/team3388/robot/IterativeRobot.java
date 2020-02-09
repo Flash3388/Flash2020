@@ -6,7 +6,8 @@ import com.flash3388.flashlib.robot.Robot;
 import com.flash3388.flashlib.robot.hid.xbox.XboxButton;
 import com.flash3388.flashlib.robot.hid.xbox.XboxController;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import frc.team3388.robot.action.EngageIntake;
+import frc.team3388.action.EngageIntake;
+import frc.team3388.subsystems.IntakeSystem;
 
 public class IterativeRobot implements IterativeRobotInterface {
     private final Robot mRobot;

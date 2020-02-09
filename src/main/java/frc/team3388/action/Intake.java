@@ -1,7 +1,7 @@
-package frc.team3388.robot.action;
+package frc.team3388.action;
 
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
-import frc.team3388.robot.IntakeSystem;
+import frc.team3388.subsystems.IntakeSystem;
 
 public class Intake extends Action
 
@@ -16,7 +16,7 @@ public class Intake extends Action
 
     @Override
     protected void execute() {
-        intakeSystem.in();
+        intakeSystem.intake();
     }
 
     @Override
