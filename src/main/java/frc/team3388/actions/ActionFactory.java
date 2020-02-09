@@ -7,16 +7,28 @@ import frc.team3388.subsystems.ShooterFeederSystem;
 import frc.team3388.subsystems.StorageSystem;
 
 public class ActionFactory {
-    public static Action fullFeedAction(StorageSystem storageSystem, ShooterFeederSystem feederSystem) {
-        return Actions.parallel(
-                new MoveStorageAction(storageSystem),
-                new FeedShooterAction(feederSystem));
+    public static Action feedShooterAction(ShooterFeederSystem feederSystem) {
+        return Actions.sequential(
+                Actions.runnableAction(feederSystem::feed),
+                Actions.instantAction(feederSystem::stop)).requires(feederSystem);
     }
 
-    public static Action fullFeedActionUntilEmpty(StorageSystem storageSystem, ShooterFeederSystem feederSystem, BallCountingSystem countingSystem) {
+    public static Action moveStorageAction(StorageSystem storageSystem) {
+        return Actions.sequential(
+                Actions.runnableAction(storageSystem::move),
+                Actions.instantAction(storageSystem::stop)).requires(storageSystem);
+    }
+
+    public static Action fullFeedAction(ShooterFeederSystem feederSystem, StorageSystem storageSystem) {
+        return Actions.parallel(
+                feedShooterAction(feederSystem),
+                moveStorageAction(storageSystem)).requires(storageSystem, feederSystem);
+    }
+
+    public static Action fullFeedActionUntilEmpty(ShooterFeederSystem feederSystem, StorageSystem storageSystem, BallCountingSystem countingSystem) {
         return Actions.conditional(countingSystem::isEmpty,
                 Actions.parallel(
-                        new MoveStorageAction(storageSystem),
-                        new FeedShooterAction(feederSystem)));
+                        feedShooterAction(feederSystem),
+                        moveStorageAction(storageSystem))).requires(storageSystem, feederSystem, countingSystem);
     }
 }
