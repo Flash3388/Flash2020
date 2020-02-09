@@ -18,7 +18,7 @@ public class IterativeRobot implements IterativeRobotInterface {
         mRobot = robot;
         this.intakeSystem=new IntakeSystem(new  WPI_TalonSRX (RobotMap.INTAKE_MANOA), 
                 new DoubleSolenoid(RobotMap.INTAKE_PISTON_FORWARD, RobotMap.INTAKE_PISTON_REVERSE),
-                new DoubleSolenoid(RobotMap.INTAKE_PISTON1_FORWARD,RobotMap.INTAKE_PISTON1_REVERSE));
+                rightPiston, new DoubleSolenoid(RobotMap.INTAKE_PISTON1_FORWARD,RobotMap.INTAKE_PISTON1_REVERSE));
         xboxController =new XboxController(RobotMap.CONTROLLER);
         xboxController.getButton(XboxButton.A).whenPressed(new EngageIntake(intakeSystem));
     }
