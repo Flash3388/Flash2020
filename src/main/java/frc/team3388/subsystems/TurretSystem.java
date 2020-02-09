@@ -13,7 +13,7 @@ public class TurretSystem extends Subsystem implements Rotatable {
     private static final double DEFAULT_MAX_ANGLE = 360;
     private static final int LARGE_GEAR_TOOTH_COUNT = 100;
     private static final int LITTLE_GEAR_TOOTH_COUNT = 10;
-    private static final double SPEED = 0.1;
+    private static final double PID_LIMIT = 0.4;
 
     private final SpeedController controller;
     private final PidController pidController;
@@ -25,6 +25,8 @@ public class TurretSystem extends Subsystem implements Rotatable {
         this.pidController = pidController;
         this.encoder = encoder;
         this.maxAngle = maxAngle;
+
+        pidController.setOutputLimit(PID_LIMIT);
     }
 
     public TurretSystem forRobot() {
@@ -39,12 +41,8 @@ public class TurretSystem extends Subsystem implements Rotatable {
         return new TurretSystem(talon, pidController, encoder, DEFAULT_MAX_ANGLE);
     }
 
-    public void turnRight() {
-        rotate(SPEED);
-    }
-
-    public void turnLeft() {
-        rotate(-SPEED);
+    public void resetPidController() {
+        pidController.reset();
     }
 
     public double getAngle() {
