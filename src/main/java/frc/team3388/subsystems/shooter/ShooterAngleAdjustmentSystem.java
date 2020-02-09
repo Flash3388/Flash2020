@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.flash3388.flashlib.robot.control.PidController;
 import com.flash3388.flashlib.robot.motion.Rotatable;
 import com.flash3388.flashlib.robot.scheduling.Subsystem;
+import com.jmath.ExtendedMath;
 import com.jmath.interpolation.Interpolation;
 import com.jmath.interpolation.LagrangePolynomial;
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -19,7 +20,9 @@ public class ShooterAngleAdjustmentSystem extends Subsystem implements Rotatable
     private static final double REVERSE_MAX_VALUE = 1/4096.0;
     private static final double ANGLE_OFFSET = 100;
     private static final double VALUE_TO_ANGLE_RATION = 360;
+    private static final double PID_LIMIT = 0.3;
     private static final Map<Double, Double> interpolationDataPoints = new HashMap<>();
+    private static final double DEFAULT_MARGIN = 0.1;
 
     private final SpeedController controller;
     private final DoubleSupplier angleSupplier;
@@ -31,6 +34,7 @@ public class ShooterAngleAdjustmentSystem extends Subsystem implements Rotatable
         this.angleSupplier = angleSupplier;
         this.pidController = pidController;
         this.interpolation = interpolation;
+        pidController.setOutputLimit(PID_LIMIT);
     }
 
     public static ShooterAngleAdjustmentSystem forRobot() {
@@ -64,6 +68,10 @@ public class ShooterAngleAdjustmentSystem extends Subsystem implements Rotatable
 
     public void rotateTo(double target) {
         rotate(pidController.calculate(angle(), target));
+    }
+
+    public boolean hasReachedAngle(double target) {
+        return ExtendedMath.equals(angle(), target, DEFAULT_MARGIN);
     }
 
     @Override
