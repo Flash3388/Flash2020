@@ -1,8 +1,8 @@
-package frc.team3388.robot.actions.climb;
+package frc.team3388.actions.climb;
 
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import com.flash3388.flashlib.time.Time;
-import frc.team3388.robot.subsystems.ClimbSystem;
+import frc.team3388.subsystems.ClimbSystem;
 
 public class ClimbPullAction extends Action {
     private ClimbSystem mClimb;
@@ -17,11 +17,11 @@ public class ClimbPullAction extends Action {
 
     @Override
     protected void execute() {
-        mClimb.pull();
+        mClimb.lift();
     }
 
     @Override
     protected void end() {
-        mClimb.stopPull();
+        mClimb.stopLift();
     }
 }
