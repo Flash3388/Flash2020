@@ -25,19 +25,23 @@ public class ClimbSystem extends Subsystem {
         return new ClimbSystem(liftController, hookController);
     }
 
-    public void lift() {
+    public void liftRobot() {
         liftController.set(LIFT_SPEED);
     }
 
-    public void liftHook() {
+    public void raiseHook() {
         hookController.set(HOOK_LIFT_SPEED);
     }
 
-    public void stopLift() {
+    public void lowerHook() {
+        hookController.set(-HOOK_LIFT_SPEED);
+    }
+
+    public void stopRobotLift() {
         liftController.stopMotor();
     }
 
-    public void stopHookLift() {
+    public void stopHook() {
         hookController.stopMotor();
     }
 }
