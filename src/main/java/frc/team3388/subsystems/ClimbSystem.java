@@ -9,31 +9,23 @@ import java.util.function.BooleanSupplier;
 public class ClimbSystem extends ConstantSpeedRotatableSubsystem{
     private static final int CONTROLLER_PORT = 4;
     private static final int LOW_INDICATOR_PORT = 4;
-    private static final int HIGH_INDICATOR_PORT = 5;
     private static final double SPEED = 1;
 
     private final BooleanSupplier lowIndicator;
-    private final BooleanSupplier highIndicator;
 
-    public ClimbSystem(SpeedController controller, BooleanSupplier lowIndicator, BooleanSupplier highIndicator) {
+    public ClimbSystem(SpeedController controller, BooleanSupplier lowIndicator) {
         super(controller, SPEED);
         this.lowIndicator = lowIndicator;
-        this.highIndicator = highIndicator;
     }
 
     public static ClimbSystem forRobot() {
         WPI_TalonSRX liftController = new WPI_TalonSRX(CONTROLLER_PORT);
         BooleanSupplier lowIndicator = () -> !new DigitalInput(LOW_INDICATOR_PORT).get();
-        BooleanSupplier highIndicator = () -> !new DigitalInput(HIGH_INDICATOR_PORT).get();
 
-        return new ClimbSystem(liftController, lowIndicator, highIndicator);
+        return new ClimbSystem(liftController, lowIndicator);
     }
 
     public boolean isLow() {
         return lowIndicator.getAsBoolean();
-    }
-
-    public boolean isHigh() {
-        return highIndicator.getAsBoolean();
     }
 }
