@@ -1,14 +1,15 @@
 package frc.team3388.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.flash3388.flashlib.frc.robot.io.devices.actuators.FrcSpeedController;
 import com.flash3388.flashlib.robot.control.PidController;
 import com.flash3388.flashlib.robot.motion.Rotatable;
 import com.flash3388.flashlib.robot.scheduling.Subsystem;
 import com.jmath.ExtendedMath;
 import edu.wpi.first.wpilibj.SpeedController;
-import frc.team3388.SrxEncoder;
+import frc.team3388.objects.SrxEncoder;
 
-public class TurretSystem extends Subsystem implements Rotatable {
+public class TurretSystem extends PreciseRotatableSubsystem {
     private static final int CONTROLLER_PORT = 3;
     private static final double DEFAULT_MAX_ANGLE = 360;
     private static final int LARGE_GEAR_TOOTH_COUNT = 100;
@@ -16,15 +17,10 @@ public class TurretSystem extends Subsystem implements Rotatable {
     private static final double PID_LIMIT = 0.4;
     private static final double DEFAULT_DELTA = 0.5;
 
-    private final SpeedController controller;
-    private final PidController pidController;
-    private final SrxEncoder encoder;
     private final double maxAngle;
 
     public TurretSystem(SpeedController controller, PidController pidController, SrxEncoder encoder, double maxAngle) {
-        this.controller = controller;
-        this.pidController = pidController;
-        this.encoder = encoder;
+        super(new FrcSpeedController(controller), encoder, pidController, PID_LIMIT, DEFAULT_DELTA);
         this.maxAngle = maxAngle;
 
         pidController.setOutputLimit(PID_LIMIT);
@@ -42,34 +38,13 @@ public class TurretSystem extends Subsystem implements Rotatable {
         return new TurretSystem(talon, pidController, encoder, DEFAULT_MAX_ANGLE);
     }
 
-    public void resetPidController() {
-        pidController.reset();
-    }
-
-    public double angle() {
-        return encoder.getAsDouble();
-    }
-
-    public void rotateTo(double target) {
-        rotate(pidController.calculate(angle(), target));
-    }
-
     @Override
     public void rotate(double speed) {
         if(canRotate())
-            controller.set(speed);
-    }
-
-    @Override
-    public void stop() {
-        controller.stopMotor();
-    }
-
-    public boolean hasReachedTarget(double target) {
-        return ExtendedMath.equals(angle(), target, DEFAULT_DELTA);
+            super.rotate(speed);
     }
 
     private boolean canRotate() {
-        return ExtendedMath.constrained(angle(), -maxAngle, maxAngle);
+        return ExtendedMath.constrained(currentValue(), -maxAngle, maxAngle);
     }
 }

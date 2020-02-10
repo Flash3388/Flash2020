@@ -1,4 +1,4 @@
-package frc.team3388;
+package frc.team3388.objects;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
