@@ -9,19 +9,11 @@ import frc.team3388.subsystems.shooter.ShooterSystem;
 import java.util.function.DoubleSupplier;
 
 public class ActionFactory {
-    public static Action percentageShootAction(ShooterSystem shooterSystem, double percentage) {
+    public static Action adjustThenShootAction(ShooterSystem shooterSystem, ShooterAngleAdjustmentSystem adjustmentSystem, double shootingAngle, double rpm) {
         return Actions.sequential(
-                Actions.runnableAction(() -> shooterSystem.rotate(percentage)),
-                Actions.instantAction(shooterSystem::stop)
-        ).requires(shooterSystem);
-    }
-
-    public static Action rpmShootAction(ShooterSystem shooterSystem, double rpm) {
-        return Actions.sequential(
-                Actions.instantAction(shooterSystem::resetPidController),
-                Actions.runnableAction(() -> shooterSystem.rotateAt(rpm)),
-                Actions.instantAction(shooterSystem::stop)
-        ).requires(shooterSystem);
+                roughShooterAngleAdjust(adjustmentSystem, shootingAngle),
+                rpmShootAction(shooterSystem, rpm)
+        ).requires(shooterSystem, adjustmentSystem);
     }
 
     public static Action roughShooterAngleAdjust(ShooterAngleAdjustmentSystem adjustmentSystem, double target) {
@@ -30,5 +22,13 @@ public class ActionFactory {
                 Actions.conditional(() -> adjustmentSystem.hasReachedAngle(target), Actions.runnableAction(() -> adjustmentSystem.rotateTo(target))),
                 Actions.instantAction(adjustmentSystem::stop)
         ).requires(adjustmentSystem);
+    }
+
+    public static Action rpmShootAction(ShooterSystem shooterSystem, double rpm) {
+        return Actions.sequential(
+                Actions.instantAction(shooterSystem::resetPidController),
+                Actions.runnableAction(() -> shooterSystem.rotateAt(rpm)),
+                Actions.instantAction(shooterSystem::stop)
+        ).requires(shooterSystem);
     }
 }
