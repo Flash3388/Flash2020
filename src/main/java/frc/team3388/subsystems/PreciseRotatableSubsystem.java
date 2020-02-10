@@ -16,6 +16,10 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
     private final PidController pidController;
     private final double targetRoughness;
 
+    public PreciseRotatableSubsystem(SpeedController controller, DoubleSupplier valueSupplier, PidController pidController) {
+        this(controller, valueSupplier, pidController, 1, 0);
+    }
+
     public PreciseRotatableSubsystem(SpeedController controller, DoubleSupplier valueSupplier, PidController pidController, double pidLimit, double targetRoughness) {
         this.controller = controller;
         this.valueSupplier = valueSupplier;

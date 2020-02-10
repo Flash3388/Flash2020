@@ -11,10 +11,9 @@ import frc.team3388.subsystems.PreciseRotatableSubsystem;
 public class ShooterSystem extends PreciseRotatableSubsystem {
     private static final int FIRST_CONTROLLER_PORT = 0;
     private static final int SECOND_CONTROLLER_PORT = 0;
-    private static final double TARGET_ROUGHNESS = 100;
 
     public ShooterSystem(SpeedController firstSpeedController, SpeedController secondSpeedController, SrxEncoder encoderSrx, PidController pidController) {
-        super(new SpeedControllerGroup(new FrcSpeedController(firstSpeedController), new FrcSpeedController(secondSpeedController)), encoderSrx, pidController, 1, TARGET_ROUGHNESS);
+        super(new SpeedControllerGroup(new FrcSpeedController(firstSpeedController), new FrcSpeedController(secondSpeedController)), encoderSrx, pidController);
     }
 
     public static ShooterSystem forRobot() {
