@@ -1,10 +1,13 @@
 package frc.team3388.subsystems;
 
+import com.flash3388.flashlib.robot.motion.Rotatable;
+import com.flash3388.flashlib.robot.motion.actions.RotateAction;
 import com.flash3388.flashlib.robot.scheduling.Subsystem;
+import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import frc.team3388.Piston;
 
-public class IntakeSystem extends Subsystem {
+public class IntakeSystem extends Subsystem implements Rotatable {
     private static final int CONTROLLER_PORT = 4;
     private static final int RIGHT_PISTON_FORWARD_CHANNEL = 1;
     private static final int RIGHT_PISTON_REVERSE_CHANNEL = 0;
@@ -30,12 +33,8 @@ public class IntakeSystem extends Subsystem {
         return new IntakeSystem(controller, rightPiston, left_Piston);
     }
 
-    public void intake() {
-        controller.set(SPEED);
-    }
-
-    public void stop() {
-        controller.stopMotor();
+    public Action rotateAction() {
+        return new RotateAction(this, () -> SPEED);
     }
 
     public void fold() {
@@ -46,5 +45,19 @@ public class IntakeSystem extends Subsystem {
     public void unfold() {
         leftPiston.open();
         rightPiston.open();
+    }
+
+    public void rotate() {
+        rotate(SPEED);
+    }
+
+    @Override
+    public void rotate(double speed) {
+        controller.set(speed);
+    }
+
+    @Override
+    public void stop() {
+        controller.stopMotor();
     }
 }

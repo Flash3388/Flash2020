@@ -8,14 +8,7 @@ public class ActionFactory {
     public static Action engageIntakeAction(IntakeSystem intakeSystem) {
         return Actions.sequential(
                 unfoldIntakeAction(intakeSystem),
-                intakeAction(intakeSystem)
-        ).requires(intakeSystem);
-    }
-
-    public static Action intakeAction(IntakeSystem intakeSystem) {
-        return Actions.sequential(
-                Actions.runnableAction(intakeSystem::intake),
-                Actions.instantAction(intakeSystem::stop)
+                intakeSystem.rotateAction()
         ).requires(intakeSystem);
     }
 
