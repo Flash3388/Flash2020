@@ -7,6 +7,7 @@ import com.flash3388.flashlib.robot.scheduling.Subsystem;
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import com.flash3388.flashlib.robot.scheduling.actions.Actions;
 import com.jmath.ExtendedMath;
+import frc.team3388.actions.ActionFactory;
 
 import java.util.function.DoubleSupplier;
 
@@ -29,7 +30,7 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
     }
 
     public Action roughRotateToAction(double target) {
-        return Actions.conditional(() -> hasReachedAngle(target), keepAtAction(target)).requires(this);
+        return ActionFactory.onCondition(keepAtAction(target), () -> hasReachedAngle(target)).requires(this);
     }
 
     public Action keepAtAction(double target) {
