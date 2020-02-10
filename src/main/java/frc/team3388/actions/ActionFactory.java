@@ -6,9 +6,11 @@ import frc.team3388.subsystems.storage.BallCountingSystem;
 import frc.team3388.subsystems.storage.ShooterFeederSystem;
 import frc.team3388.subsystems.storage.StorageSystem;
 
+import java.util.function.BooleanSupplier;
+
 public class ActionFactory {
     public static Action fullFeedActionUntilEmpty(ShooterFeederSystem feederSystem, StorageSystem storageSystem, BallCountingSystem countingSystem) {
-        return Actions.conditional(countingSystem::isEmpty, fullFeedAction(feederSystem, storageSystem)).requires(feederSystem, storageSystem, countingSystem);
+        return onCondition(fullFeedAction(feederSystem, storageSystem), countingSystem::isEmpty).requires(feederSystem, storageSystem, countingSystem);
     }
 
     public static Action fullFeedAction(ShooterFeederSystem feederSystem, StorageSystem storageSystem) {
@@ -16,5 +18,9 @@ public class ActionFactory {
                 feederSystem.rotateAction(),
                 storageSystem.rotateAction()
         ).requires(storageSystem, feederSystem);
+    }
+
+    public static Action onCondition(Action action, BooleanSupplier condition) {
+        return new ConditionalAction(action, condition);
     }
 }
