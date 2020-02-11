@@ -33,9 +33,8 @@ public class TurretSystem extends PreciseRotatableSubsystem {
         final double kD = 0.1;
 
         PidController pidController = new PidController(kP, kI, kD, 0);
-        WPI_TalonSRX talon = new WPI_TalonSRX(CONTROLLER_PORT);
-        talon.setInverted(true);
-        SrxEncoder encoder = new SrxEncoder(CONTROLLER_PORT, -LITTLE_GEAR_TOOTH_COUNT/(double)LARGE_GEAR_TOOTH_COUNT * 360);
+        WPI_TalonSRX talon = new WPI_TalonSRX(CONTROLLER_PORT); talon.setInverted(true);
+        SrxEncoder encoder = new SrxEncoder(talon, -LITTLE_GEAR_TOOTH_COUNT/(double)LARGE_GEAR_TOOTH_COUNT * 360);
         encoder.reset();
 
         return new TurretSystem(talon, pidController, encoder, DEFAULT_MAX_ANGLE);
