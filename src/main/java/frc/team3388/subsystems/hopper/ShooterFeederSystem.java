@@ -1,4 +1,4 @@
-package frc.team3388.subsystems.storage;
+package frc.team3388.subsystems.hopper;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -6,7 +6,7 @@ import frc.team3388.subsystems.ConstantSpeedRotatableSubsystem;
 
 public class ShooterFeederSystem extends ConstantSpeedRotatableSubsystem {
     private static final int CONTROLLER_PORT = 2;
-    private static final double SPEED = 0.5;
+    private static final double SPEED = 0.8;
 
     public ShooterFeederSystem(SpeedController controller) {
         super(controller, SPEED);

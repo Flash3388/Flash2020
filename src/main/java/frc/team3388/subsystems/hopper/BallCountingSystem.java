@@ -1,9 +1,8 @@
-package frc.team3388.subsystems.storage;
+package frc.team3388.subsystems.hopper;
 
 import com.flash3388.flashlib.robot.scheduling.Subsystem;
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import com.flash3388.flashlib.robot.scheduling.actions.Actions;
-import com.flash3388.flashlib.robot.scheduling.triggers.Trigger;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 import java.util.function.BooleanSupplier;
@@ -17,7 +16,7 @@ public class BallCountingSystem extends Subsystem {
     private int counter;
     private boolean shooting;
 
-    public BallCountingSystem(BooleanSupplier feederSupplier, BooleanSupplier intakeSupplier, int maxBalls) {
+    public BallCountingSystem(BooleanSupplier intakeSupplier, BooleanSupplier feederSupplier, int maxBalls) {
         this.maxBalls = maxBalls;
 
         counter = 0;
@@ -27,7 +26,18 @@ public class BallCountingSystem extends Subsystem {
     }
 
     public static  BallCountingSystem forRobot() {
-        return new BallCountingSystem(() -> !new DigitalInput(FEEDER_SENSOR_PORT).get(), () -> !new DigitalInput(INTAKE_SENSOR_PORT).get(), MAX_BALLS_LEGALLY);
+        DigitalInput intakeSensor = new DigitalInput(INTAKE_SENSOR_PORT);
+        DigitalInput feederSensor = new DigitalInput(FEEDER_SENSOR_PORT);
+
+        return new BallCountingSystem(() -> !intakeSensor.get(), () -> !feederSensor.get(), MAX_BALLS_LEGALLY);
+    }
+
+    public Action startShootingAction() {
+        return Actions.instantAction(this::startShooting);
+    }
+
+    public Action stopShootingAction() {
+        return Actions.instantAction(this::stopShooting);
     }
 
     public void startShooting() {
