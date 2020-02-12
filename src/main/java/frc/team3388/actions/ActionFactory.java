@@ -7,6 +7,10 @@ import frc.team3388.subsystems.ShooterSystem;
 import java.util.function.BooleanSupplier;
 
 public class ActionFactory {
+    public static Action interpolateShootAction(ShooterSystem shooterSystem, double distance) {
+        return shooterSystem.keepAtAction(shooterSystem.interpolateRpm(distance));
+    }
+
     public static Action onCondition(Action action, BooleanSupplier condition) {
         return new ConditionalAction(action, condition);
     }
