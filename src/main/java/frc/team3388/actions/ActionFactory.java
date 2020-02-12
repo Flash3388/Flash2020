@@ -6,8 +6,8 @@ import frc.team3388.subsystems.ClimbSystem;
 import java.util.function.BooleanSupplier;
 
 public class ActionFactory {
-    public static Action foldClimbAction(ClimbSystem climbSystem) {
-        return onCondition(climbSystem.rotateAction(), climbSystem::isLow).requires(climbSystem);
+    public static Action liftClimbHooksAction(ClimbSystem climbSystem) {
+        return onCondition(climbSystem.rotateAction(), climbSystem::isAtMaxHight).requires(climbSystem);
     }
 
     public static Action onCondition(Action action, BooleanSupplier condition) {

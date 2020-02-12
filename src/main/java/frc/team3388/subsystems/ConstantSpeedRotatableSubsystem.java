@@ -1,14 +1,19 @@
 package frc.team3388.subsystems;
 
+import com.flash3388.flashlib.frc.robot.io.devices.actuators.FrcSpeedController;
+import com.flash3388.flashlib.robot.io.devices.actuators.SpeedController;
 import com.flash3388.flashlib.robot.motion.Rotatable;
 import com.flash3388.flashlib.robot.motion.actions.RotateAction;
 import com.flash3388.flashlib.robot.scheduling.Subsystem;
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
-import edu.wpi.first.wpilibj.SpeedController;
 
 public class ConstantSpeedRotatableSubsystem extends Subsystem implements Rotatable {
     private final SpeedController controller;
     private final double rotateSpeed;
+
+    public ConstantSpeedRotatableSubsystem(edu.wpi.first.wpilibj.SpeedController controller, double rotateSpeed) {
+        this(new FrcSpeedController(controller), rotateSpeed);
+    }
 
     public ConstantSpeedRotatableSubsystem(SpeedController controller, double rotateSpeed) {
         this.controller = controller;
@@ -30,6 +35,6 @@ public class ConstantSpeedRotatableSubsystem extends Subsystem implements Rotata
 
     @Override
     public void stop() {
-        controller.stopMotor();
+        controller.stop();
     }
 }
