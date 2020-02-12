@@ -2,8 +2,7 @@ package frc.team3388.actions;
 
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import com.flash3388.flashlib.robot.scheduling.actions.Actions;
-import frc.team3388.subsystems.shooter.ShooterAngleAdjustmentSystem;
-import frc.team3388.subsystems.shooter.ShooterSystem;
+import frc.team3388.subsystems.ShooterSystem;
 
 import java.util.function.BooleanSupplier;
 

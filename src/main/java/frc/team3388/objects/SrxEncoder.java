@@ -14,6 +14,11 @@ public class SrxEncoder implements DoubleSupplier {
         talon = new WPI_TalonSRX(deviceNumber);
     }
 
+    public SrxEncoder(WPI_TalonSRX talon, double revolutionToUnitRation) {
+        this.talon = talon;
+        this.revolutionToUnitRation = revolutionToUnitRation;
+    }
+
     public static SrxEncoder forDrivetrain(int deviceNumber, double wheelDiameter) {
         return new SrxEncoder(deviceNumber, wheelDiameter * Math.PI);
     }

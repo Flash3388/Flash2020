@@ -1,4 +1,4 @@
-package frc.team3388.subsystems.shooter;
+package frc.team3388.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.flash3388.flashlib.frc.robot.io.devices.actuators.FrcSpeedController;
@@ -6,7 +6,6 @@ import com.flash3388.flashlib.robot.control.PidController;
 import com.flash3388.flashlib.robot.io.devices.actuators.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.SpeedController;
 import frc.team3388.objects.SrxEncoder;
-import frc.team3388.subsystems.PreciseRotatableSubsystem;
 
 public class ShooterSystem extends PreciseRotatableSubsystem {
     private static final int FIRST_CONTROLLER_PORT = 0;
@@ -24,8 +23,8 @@ public class ShooterSystem extends PreciseRotatableSubsystem {
         PidController pidController = new PidController(kP, kI, kD, 0);
         WPI_TalonSRX firstSpeedController = new WPI_TalonSRX(FIRST_CONTROLLER_PORT);
         WPI_TalonSRX secondSpeedController = new WPI_TalonSRX(SECOND_CONTROLLER_PORT);
+        SrxEncoder encoderSrx = new SrxEncoder(firstSpeedController, 1);
         secondSpeedController.follow(firstSpeedController);
-        SrxEncoder encoderSrx = new SrxEncoder(FIRST_CONTROLLER_PORT, 1);
 
         return new ShooterSystem(firstSpeedController, secondSpeedController, encoderSrx, pidController);
     }
