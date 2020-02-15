@@ -1,8 +1,7 @@
-package frc.team3388.subsystems.hopper;
+package frc.team3388.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
-import frc.team3388.subsystems.ConstantSpeedRotatableSubsystem;
 
 public class hopperSystem extends ConstantSpeedRotatableSubsystem {
     private static final int CONTROLLER_PORT = 1;
