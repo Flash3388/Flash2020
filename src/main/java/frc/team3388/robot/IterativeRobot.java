@@ -21,7 +21,6 @@ public class IterativeRobot implements IterativeRobotInterface {
 
     @Override
     public void teleopInit() {
-
     }
 
     @Override
