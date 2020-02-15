@@ -47,6 +47,7 @@ repositories {
 // Also defines JUnit 4.
 dependencies {
     implementation group: 'com.flash3388.flashlib', name: 'flashlib-frc', version: '2020.1.0'
+    implementation 'com.flash3388.tracer:tracerj:1.0.0-beta.13'
 
     implementation wpi.deps.wpilib()
     nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
