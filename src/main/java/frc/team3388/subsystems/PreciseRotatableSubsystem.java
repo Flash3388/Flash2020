@@ -30,10 +30,10 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
     }
 
     public Action roughRotateToAction(double target) {
-        return ActionFactory.onCondition(keepAtAction(target), () -> hasReachedAngle(target)).requires(this);
+        return ActionFactory.onCondition(keepAtAction(() -> target), () -> hasReachedAngle(target)).requires(this);
     }
 
-    public Action keepAtAction(double target) {
+    public Action keepAtAction(DoubleSupplier target) {
         return Actions.sequential(
                 Actions.instantAction(this::resetPidController),
                 Actions.runnableAction(() -> rotateTo(target)),
@@ -53,8 +53,8 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
         return valueSupplier.getAsDouble();
     }
 
-    public void rotateTo(double target) {
-        rotate(pidController.calculate(currentValue(), target));
+    public void rotateTo(DoubleSupplier target) {
+        rotate(pidController.calculate(currentValue(), target.getAsDouble()));
     }
 
     @Override
