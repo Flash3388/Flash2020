@@ -30,7 +30,7 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
     }
 
     public Action roughRotateToAction(double target) {
-        return ActionFactory.onCondition(keepAtAction(target), () -> hasReachedAngle(target)).requires(this);
+        return ActionFactory.onCondition(keepAtAction(target), () -> hasReachedTarget(target)).requires(this);
     }
 
     public Action keepAtAction(double target) {
@@ -45,7 +45,7 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
         pidController.reset();
     }
 
-    public boolean hasReachedAngle(double target) {
+    public boolean hasReachedTarget(double target) {
         return ExtendedMath.equals(currentValue(), target, targetRoughness);
     }
 

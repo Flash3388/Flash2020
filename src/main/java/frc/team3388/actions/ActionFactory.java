@@ -22,6 +22,10 @@ public class ActionFactory {
         );
     }
 
+    public static Action conditionalOnShooterAction(ShooterSystem shooterSystem, double rpm, Action action) {
+        return Actions.conditional(() -> shooterSystem.hasReachedTarget(rpm), action);
+    }
+
     public static Action onCondition(Action action, BooleanSupplier condition) {
         return new ConditionalAction(action, condition);
     }
