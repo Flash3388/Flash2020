@@ -23,12 +23,12 @@ public class ShooterSystem extends PreciseRotatableSubsystem {
     private static final int PISTON_FORWARD_PORT = 1;
     private static final int PISTON_REVERSE_PORT = 0;
 
-//    private final Piston lid;
+    private final Piston lid;
     private final Interpolation interpolation;
 
     public ShooterSystem(SpeedController firstSpeedController, SpeedController secondSpeedController, SrxEncoder encoderSrx, PidController pidController, Piston lid, Interpolation interpolation) {
         super(new SpeedControllerGroup(new FrcSpeedController(firstSpeedController), new FrcSpeedController(secondSpeedController)), () -> encoderSrx.getVelocityPerSecond() * 60, pidController, 1, 50);
-//        this.lid = lid;
+        this.lid = lid;
         this.interpolation = interpolation;
     }
 
@@ -48,14 +48,14 @@ public class ShooterSystem extends PreciseRotatableSubsystem {
 
         return new ShooterSystem(firstSpeedController, secondSpeedController, encoderSrx, pidController, null, interpolation);
     }
-//
-//    public void hideLid() {
-//        lid.close();
-//    }
-//
-//    public void closeLid() {
-//        lid.open();
-//    }
+
+    public void hideLid() {
+        lid.close();
+    }
+
+    public void closeLid() {
+        lid.open();
+    }
 
     public double interpolateRpm(double distance) {
         return interpolation.applyAsDouble(distance);
