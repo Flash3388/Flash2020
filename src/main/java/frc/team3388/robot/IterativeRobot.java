@@ -2,6 +2,7 @@ package frc.team3388.robot;
 
 import com.flash3388.flashlib.frc.robot.IterativeRobotInterface;
 import com.flash3388.flashlib.robot.Robot;
+import frc.team3388.subsystems.ShooterSystem;
 
 public class IterativeRobot implements IterativeRobotInterface {
     private final Robot robot;
@@ -21,7 +22,6 @@ public class IterativeRobot implements IterativeRobotInterface {
 
     @Override
     public void teleopInit() {
-
     }
 
     @Override
