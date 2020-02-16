@@ -38,8 +38,8 @@ public class ShooterSystem extends PreciseRotatableSubsystem {
         final double kD = 0.001;
 
         PidController pidController = new PidController(kP, kI, kD, 0);
-        WPI_TalonSRX firstSpeedController = new WPI_TalonSRX(FIRST_CONTROLLER_PORT);
-        WPI_VictorSPX secondSpeedController = new WPI_VictorSPX(SECOND_CONTROLLER_PORT);
+        WPI_TalonSRX firstSpeedController = new WPI_TalonSRX(FIRST_CONTROLLER_PORT); firstSpeedController.setInverted(true);
+        WPI_VictorSPX secondSpeedController = new WPI_VictorSPX(SECOND_CONTROLLER_PORT); secondSpeedController.setInverted(true);
         SrxEncoder encoderSrx = new SrxEncoder(firstSpeedController, 1);
 //        Piston lid = new Piston(PISTON_FORWARD_PORT, PISTON_REVERSE_PORT);
         Interpolation interpolation = LagrangePolynomial.fromMap(dataPoints());
