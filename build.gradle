@@ -46,7 +46,10 @@ repositories {
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 4.
 dependencies {
-    implementation group: 'com.flash3388.flashlib', name: 'flashlib-frc', version: '2020.1.0'
+    compile ('com.flash3388.flashlib:flashlib-frc:2020.1.0') {
+        exclude group: 'com.flash3388.util', module: 'jmath'
+    }
+    compile "com.github.tomtzook:jmath:1.1.0"
 
     implementation wpi.deps.wpilib()
     nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
