@@ -16,6 +16,7 @@ public class ConstantSpeedRotatableSubsystem extends Subsystem implements Rotata
     }
 
     public Action rotateAction() {
+        System.out.println("gay");
         return new RotateAction(this, () -> rotateSpeed);
     }
 

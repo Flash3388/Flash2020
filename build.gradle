@@ -50,6 +50,7 @@ dependencies {
         exclude group: 'com.flash3388.util', module: 'jmath'
     }
     compile "com.github.tomtzook:jmath:1.1.0"
+    implementation 'com.flash3388.tracer:tracerj:1.0.0-beta.13'
 
     implementation wpi.deps.wpilib()
     nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
