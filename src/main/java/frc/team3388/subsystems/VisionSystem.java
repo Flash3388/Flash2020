@@ -29,4 +29,8 @@ public class VisionSystem extends Subsystem {
     public double distance() {
         return distanceSupplier.getAsDouble();
     }
+
+    public boolean hasFoundTarget() {
+        return distanceSupplier.getAsDouble() == -1;
+    }
 }

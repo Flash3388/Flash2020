@@ -7,6 +7,9 @@ import com.flash3388.flashlib.time.Time;
 import frc.team3388.subsystems.ShooterSystem;
 import frc.team3388.subsystems.TurretSystem;
 import frc.team3388.subsystems.VisionSystem;
+import frc.team3388.subsystems.storage.BallCountingSystem;
+import frc.team3388.subsystems.ShooterFeederSystem;
+import frc.team3388.subsystems.hopperSystem;
 
 import java.util.function.BooleanSupplier;
 
@@ -34,8 +37,11 @@ public class ActionFactory {
         );
     }
 
-    public static Action conditionalOnShooterAction(ShooterSystem shooterSystem, double rpm, Action action) {
-        return Actions.conditional(() -> shooterSystem.hasReachedTarget(rpm), action);
+    public static Action fullFeedAction(ShooterFeederSystem feederSystem, hopperSystem hopperSystem) {
+        return Actions.parallel(
+                feederSystem.rotateAction(),
+                hopperSystem.rotateAction()
+        ).requires(hopperSystem, feederSystem);
     }
 
     public static Action onCondition(Action action, BooleanSupplier condition) {
