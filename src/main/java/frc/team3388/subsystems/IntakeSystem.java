@@ -1,9 +1,6 @@
 package frc.team3388.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
-import edu.wpi.first.wpilibj.SpeedController;
 import frc.team3388.objects.Piston;
 
 public class IntakeSystem extends ConstantSpeedRotatableSubsystem {

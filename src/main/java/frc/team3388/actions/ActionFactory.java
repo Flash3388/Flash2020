@@ -5,6 +5,7 @@ import com.flash3388.flashlib.frc.robot.hid.JoystickAxis;
 import com.flash3388.flashlib.robot.motion.actions.RotateAction;
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import com.flash3388.flashlib.robot.scheduling.actions.Actions;
+import com.flash3388.flashlib.robot.scheduling.actions.GenericActionBuilder;
 import com.flash3388.flashlib.robot.systems.drive.actions.TankDriveAction;
 import com.flash3388.flashlib.time.Time;
 import frc.team3388.subsystems.DriveSystem;
@@ -81,6 +82,11 @@ public class ActionFactory {
     }
 
     public static Action onCondition(Action action, BooleanSupplier condition) {
-        return new ConditionalAction(action, condition);
+        return new GenericActionBuilder()
+                .onInitialize(action::start)
+                .onEnd(action::cancel)
+                .isFinished(condition)
+                .runOnEndWhenInterrupted()
+                .build();
     }
 }

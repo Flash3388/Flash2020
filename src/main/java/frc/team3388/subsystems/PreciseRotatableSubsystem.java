@@ -6,6 +6,7 @@ import com.flash3388.flashlib.robot.motion.Rotatable;
 import com.flash3388.flashlib.robot.scheduling.Subsystem;
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import com.flash3388.flashlib.robot.scheduling.actions.Actions;
+import com.flash3388.flashlib.robot.scheduling.actions.GenericActionBuilder;
 import com.jmath.ExtendedMath;
 import frc.team3388.actions.ActionFactory;
 
@@ -34,11 +35,13 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
     }
 
     public Action keepAtAction(DoubleSupplier target) {
-        return Actions.sequential(
-                Actions.instantAction(this::resetPidController),
-                Actions.runnableAction(() -> rotateTo(target)),
-                Actions.instantAction(this::stop)
-        ).requires(this);
+        return new GenericActionBuilder()
+                .onInitialize(this::resetPidController)
+                .onExecute(() -> rotateTo(target))
+                .onEnd(this::stop)
+                .runOnEndWhenInterrupted()
+                .requires(this)
+                .build();
     }
 
     public void resetPidController() {

@@ -7,9 +7,6 @@ import com.flash3388.flashlib.robot.control.PidController;
 import com.flash3388.flashlib.robot.io.devices.actuators.SpeedControllerGroup;
 import com.jmath.interpolation.Interpolation;
 import com.jmath.interpolation.LagrangePolynomial;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.SpeedController;
 import frc.team3388.objects.Piston;
 import frc.team3388.objects.SrxEncoder;
@@ -26,17 +23,19 @@ public class ShooterSystem extends PreciseRotatableSubsystem {
 
     private final Piston lid;
     private final Interpolation interpolation;
+    private final SrxEncoder srxEncoder;
 
-    public ShooterSystem(SpeedController firstSpeedController, SpeedController secondSpeedController, SrxEncoder encoderSrx, PidController pidController, Piston lid, Interpolation interpolation) {
-        super(new SpeedControllerGroup(new FrcSpeedController(firstSpeedController), new FrcSpeedController(secondSpeedController)), () -> encoderSrx.getVelocityPerSecond() * 60, pidController, 1, 50);
+    public ShooterSystem(SpeedController firstSpeedController, SpeedController secondSpeedControllerSrxEncoder, SrxEncoder encoderSrx, PidController pidController, Piston lid, Interpolation interpolation) {
+        super(new SpeedControllerGroup(new FrcSpeedController(firstSpeedController), new FrcSpeedController(secondSpeedControllerSrxEncoder)), () -> encoderSrx.getVelocityPerSecond() * 60, pidController, 1, 200);
         this.lid = lid;
         this.interpolation = interpolation;
+        this.srxEncoder = encoderSrx;
     }
 
     public static ShooterSystem forRobot() {
-        final double kP = 0.002;
+        final double kP = 0.0017;
         final double kI = 0;
-        final double kD = 0.001;
+        final double kD = 0.0012;
 
         PidController pidController = new PidController(kP, kI, kD, 0);
         WPI_TalonSRX firstSpeedController = new WPI_TalonSRX(FIRST_CONTROLLER_PORT); firstSpeedController.setInverted(true);
@@ -46,7 +45,6 @@ public class ShooterSystem extends PreciseRotatableSubsystem {
 //        Piston lid = new Piston(PISTON_FORWARD_PORT, PISTON_REVERSE_PORT);
         Interpolation interpolation = LagrangePolynomial.fromMap(dataPoints());
 
-        secondSpeedController.follow(firstSpeedController);
 
         return new ShooterSystem(firstSpeedController, secondSpeedController, encoderSrx, pidController, null, interpolation);
     }
@@ -63,10 +61,15 @@ public class ShooterSystem extends PreciseRotatableSubsystem {
         return interpolation.applyAsDouble(distance);
     }
 
+    @Override
+    public void resetPidController() {
+        super.resetPidController();
+        srxEncoder.reset();
+    }
 
     @Override
     public void rotateTo(DoubleSupplier target) {
-        super.rotateTo(() -> target.getAsDouble() + 250);
+        super.rotateTo(() -> target.getAsDouble() + 500);
     }
 
     private static Map<Double, Double> dataPoints() {

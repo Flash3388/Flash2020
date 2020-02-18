@@ -14,7 +14,7 @@ import frc.team3388.objects.SrxEncoder;
 
 public class TurretSystem extends PreciseRotatableSubsystem {
     private static final int CONTROLLER_PORT = 3;
-    private static final double DEFAULT_MAX_ANGLE = 135;
+    private static final double DEFAULT_MAX_ANGLE = 110;
     private static final int LARGE_GEAR_TOOTH_COUNT = 110;
     private static final int LITTLE_GEAR_TOOTH_COUNT = 27;
     private static final double PID_LIMIT = 0.4;
@@ -42,7 +42,7 @@ public class TurretSystem extends PreciseRotatableSubsystem {
 
     @Override
     public void rotate(double speed) {
-        speed = canRotate() ? speed : 0;
+        speed = !canRotate() && Math.signum(speed) != Math.signum(currentValue()) ? 0 : speed;
         super.rotate(speed);
     }
 
