@@ -8,7 +8,6 @@ import com.flash3388.flashlib.robot.scheduling.actions.Actions;
 import com.flash3388.flashlib.robot.scheduling.actions.GenericActionBuilder;
 import com.flash3388.flashlib.robot.systems.drive.actions.TankDriveAction;
 import com.flash3388.flashlib.time.Time;
-import frc.team3388.subsystems.DriveSystem;
 import frc.team3388.subsystems.*;
 
 import java.util.function.BooleanSupplier;
@@ -19,49 +18,60 @@ public class ActionFactory {
         return new TankDriveAction(driveSystem, right.getAxis(JoystickAxis.Y), left.getAxis(JoystickAxis.Y));
     }
 
-    public static Action rotateTurretByVision(TurretSystem turretSystem, VisionSystem visionSystem) {
-        double initialTurretAngle = turretSystem.currentValue();
-
-        return Actions.sequential(
-                Actions.wait(Time.milliseconds(100)),
-                turretSystem.keepAtAction(() -> initialTurretAngle + visionSystem.alignmentError())
-        ).requires(turretSystem, visionSystem);
+    public static Action manualTurretAction(TurretSystem turretSystem, Joystick joystick) {
+        return new RotateAction(turretSystem, () -> -joystick.getAxis(JoystickAxis.Z).getAsDouble() * 0.5);
     }
 
-    public static Action fullShootAction(ShooterSystem shooterSystem, ShooterFeederSystem feederSystem, HopperSystem hopperSystem, DoubleSupplier rpm) {
+    public static Action visionShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, ShooterSystem shooterSystem, TurretSystem turretSystem, VisionSystem visionSystem) {
+        return Actions.sequential(
+                Actions.wait(Time.milliseconds(100)),
+                Actions.parallel(
+                        rotateTurretByVision(turretSystem, visionSystem),
+                        interpolateShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, visionSystem.distance())
+                )
+        );
+    }
+
+    public static Action rotateTurretByVision(TurretSystem turretSystem, VisionSystem visionSystem) {
+        return new GenericActionBuilder()
+                .onInitialize(visionSystem::setProcessingMode)
+                .onExecute(() -> turretSystem.rotateTo(() -> 0))
+                .onEnd(() ->  {visionSystem.setNormalMode(); turretSystem.stop();})
+                .runOnEndWhenInterrupted()
+                .build().requires(turretSystem, visionSystem);
+    }
+
+    public static Action interpolateShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, ShooterSystem shooterSystem, double distance) {
+        return fullHighShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, () -> shooterSystem.interpolateRpm(distance));
+    }
+
+    public static Action fullHighShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, ShooterSystem shooterSystem, DoubleSupplier rpm) {
         return Actions.sequential(
                 shooterSystem.roughRotateToAction(rpm.getAsDouble()),
                 Actions.parallel(
                         shooterSystem.keepAtAction(rpm),
-                        fullFeedAction(feederSystem, hopperSystem)
+                        fullFeedAction(intakeSystem, hopperSystem, feederSystem)
                 )
         ).requires(shooterSystem, feederSystem, hopperSystem);
     }
 
-    public static Action highInterpolateShootAction(ShooterSystem shooterSystem, double distance) {
-        return Actions.sequential(
-                Actions.instantAction(shooterSystem::hideLid),
-                shooterSystem.keepAtAction(() -> shooterSystem.interpolateRpm(distance))
-        );
-    }
-
-    public static Action lowShootAction(ShooterSystem shooterSystem) {
-        return Actions.sequential(
-                Actions.instantAction(shooterSystem::closeLid),
-                new RotateAction(shooterSystem, () -> 0.5)
-        );
-    }
-
-    public static Action fullFeedAction(ShooterFeederSystem feederSystem, HopperSystem hopperSystem) {
+    public static Action fullLowShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, ShooterSystem shooterSystem) {
         return Actions.parallel(
-                feederSystem.rotateAction(),
-                hopperSystem.rotateAction()
+                shooterSystem.lowShootAction(),
+                fullFeedAction(intakeSystem, hopperSystem, feederSystem)
+        );
+    }
+
+    public static Action fullFeedAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem) {
+        return Actions.parallel(
+                fullIntakeAction(intakeSystem, hopperSystem),
+                feederSystem.rotateAction()
         ).requires(hopperSystem, feederSystem);
     }
 
     public static Action fullIntakeAction(IntakeSystem intakeSystem, HopperSystem hopperSystem) {
         return Actions.parallel(
-                intakeSystem.rotateAction(),
+                engageIntakeAction(intakeSystem),
                 hopperSystem.rotateAction()
         );
     }

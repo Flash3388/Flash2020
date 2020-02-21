@@ -69,4 +69,12 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
     public void stop() {
         controller.stop();
     }
+
+    protected void setOutputLimit(double output) {
+        pidController.setOutputLimit(output);
+    }
+
+    protected void setMaxOutputRampRate(double rate) {
+        pidController.setOutputRampRate(rate);
+    }
 }

@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 
 public class HopperSystem extends ConstantSpeedRotatableSubsystem {
     private static final int CONTROLLER_PORT = 8;
-    private static final double SPEED = 0.8;
+    private static final double SPEED = 0.9;
 
     public HopperSystem(SpeedController controller) {
         super(controller, SPEED);
