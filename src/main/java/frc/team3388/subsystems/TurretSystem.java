@@ -3,13 +3,11 @@ package frc.team3388.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.flash3388.flashlib.frc.robot.io.devices.actuators.FrcSpeedController;
 import com.flash3388.flashlib.robot.control.PidController;
-import com.flash3388.flashlib.robot.motion.Rotatable;
-import com.flash3388.flashlib.robot.scheduling.Subsystem;
 import com.jmath.ExtendedMath;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.team3388.objects.NetworkDoubleProperty;
 import frc.team3388.objects.SrxEncoder;
 
@@ -18,7 +16,7 @@ public class TurretSystem extends PreciseRotatableSubsystem {
     private static final double DEFAULT_MAX_ANGLE = 110;
     private static final int LARGE_GEAR_TOOTH_COUNT = 110;
     private static final int LITTLE_GEAR_TOOTH_COUNT = 27;
-    private static final double PID_LIMIT = 0.3;
+    private static final double PID_LIMIT = 0.25;
     private static final double DEFAULT_DELTA = 0.5;
 
     private final double maxAngle;
@@ -29,13 +27,10 @@ public class TurretSystem extends PreciseRotatableSubsystem {
     }
 
     public static TurretSystem forRobot() {
-        NetworkTable pid = NetworkTableInstance.getDefault().getTable("pid");
-        final NetworkDoubleProperty kP = new NetworkDoubleProperty(pid.getEntry("kP"));
-        final NetworkDoubleProperty kI = new NetworkDoubleProperty(pid.getEntry("kI"));
-        final NetworkDoubleProperty kD = new NetworkDoubleProperty(pid.getEntry("kD"));
-        final NetworkDoubleProperty kF = new NetworkDoubleProperty(pid.getEntry("kF"));
+        final double kP = 0.08;
+        final double kD = 0.18;
 
-        PidController pidController = new PidController(kP, kI, kD, kF);
+        PidController pidController = new PidController(kP, 0, kD, 0);
         WPI_TalonSRX talon = new WPI_TalonSRX(CONTROLLER_PORT);
         talon.setInverted(true);
         SrxEncoder encoder = new SrxEncoder(talon, LITTLE_GEAR_TOOTH_COUNT / (double) LARGE_GEAR_TOOTH_COUNT * 360);

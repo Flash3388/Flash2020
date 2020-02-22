@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 
 public class FeederSystem extends ConstantSpeedRotatableSubsystem {
     private static final int CONTROLLER_PORT = 9;
-    private static final double SPEED = 0.9;
+    private static final double SPEED = 0.4;
 
     public FeederSystem(SpeedController controller) {
         super(controller, SPEED);

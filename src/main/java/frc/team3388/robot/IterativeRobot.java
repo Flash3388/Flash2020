@@ -40,7 +40,7 @@ public class IterativeRobot implements IterativeRobotInterface {
         left = new Joystick(2);
 
         driveSystem.setDefaultAction(ActionFactory.manualDriveAction(driveSystem, right, left));
-        right.getButton(0).whileHeld(shooterSystem.keepAtAction(() -> 5000));
+        right.getButton(0).whileHeld(ActionFactory.fullHighShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, () -> 4600));
         right.getButton(2).whileHeld(ActionFactory.fullFeedAction(intakeSystem, hopperSystem, feederSystem));
         right.getButton(1).whileHeld(ActionFactory.fullIntakeAction(intakeSystem, hopperSystem));
         left.getButton(0).whileHeld(ActionFactory.fullLowShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem));
