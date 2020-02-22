@@ -11,7 +11,7 @@ public class VisionSystem extends Subsystem {
     private static final String VISION_TABLE_NAME = "vision";
     private static final String ALIGNMENT_ERROR_ENTRY_NAME = "angle_degrees";
     private static final String DISTANCE_ENTRY_NAME = "distance_cm";
-    private static final int PROCESSING_EXPOSURE_VALUE = 20;
+    private static final int PROCESSING_EXPOSURE_VALUE = 10;
     private static final int DEFAULT_EXPOSURE_VALUE = 46;
 
     private final NetworkTableEntry exposureEntry;

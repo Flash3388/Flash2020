@@ -29,12 +29,12 @@ public class IntakeSystem extends ConstantSpeedRotatableSubsystem {
     }
 
     public void fold() {
-        leftPiston.close();
-        rightPiston.close();
+//        leftPiston.close();
+//        rightPiston.close();
     }
 
     public void unfold() {
-        leftPiston.open();
-        rightPiston.open();
+//        leftPiston.open();
+//        rightPiston.open();
     }
 }

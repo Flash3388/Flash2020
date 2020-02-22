@@ -10,6 +10,7 @@ import frc.team3388.actions.ActionFactory;
 import frc.team3388.subsystems.*;
 
 public class IterativeRobot implements IterativeRobotInterface {
+    private final Joystick systemController;
     private final Joystick right;
     private final Joystick left;
 
@@ -34,10 +35,20 @@ public class IterativeRobot implements IterativeRobotInterface {
         climbSystem = ClimbSystem.forRobot();
         visionSystem = VisionSystem.forRobot();
 
+        systemController = new Joystick(0);
         right = new Joystick(1);
         left = new Joystick(2);
 
         driveSystem.setDefaultAction(ActionFactory.manualDriveAction(driveSystem, right, left));
+        right.getButton(0).whileHeld(shooterSystem.keepAtAction(() -> 5000));
+        right.getButton(2).whileHeld(ActionFactory.fullFeedAction(intakeSystem, hopperSystem, feederSystem));
+        right.getButton(1).whileHeld(ActionFactory.fullIntakeAction(intakeSystem, hopperSystem));
+        left.getButton(0).whileHeld(ActionFactory.fullLowShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem));
+        left.getButton(1).whileHeld(ActionFactory.rotateTurretByVision(turretSystem, visionSystem));
+//        systemController.getButton(0).whileHeld(ActionFactory.fullHighShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, () -> 5000));
+//        systemController.getButton(1).whileHeld(ActionFactory.fullIntakeAction(intakeSystem, hopperSystem));
+//        systemController.getButton(2).whileHeld(ActionFactory.rotateTurretByVision(turretSystem, visionSystem));
+        turretSystem.setDefaultAction(ActionFactory.manualTurretAction(turretSystem, right));
     }
 
     @Override

@@ -1,11 +1,14 @@
 package frc.team3388.actions;
 
+import com.beans.DoubleProperty;
+import com.beans.properties.SimpleDoubleProperty;
 import com.flash3388.flashlib.frc.robot.hid.Joystick;
 import com.flash3388.flashlib.frc.robot.hid.JoystickAxis;
 import com.flash3388.flashlib.robot.motion.actions.RotateAction;
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import com.flash3388.flashlib.robot.scheduling.actions.Actions;
 import com.flash3388.flashlib.robot.scheduling.actions.GenericActionBuilder;
+import com.flash3388.flashlib.robot.scheduling.actions.SequentialActionGroup;
 import com.flash3388.flashlib.robot.systems.drive.actions.TankDriveAction;
 import com.flash3388.flashlib.time.Time;
 import frc.team3388.subsystems.*;
@@ -19,7 +22,7 @@ public class ActionFactory {
     }
 
     public static Action manualTurretAction(TurretSystem turretSystem, Joystick joystick) {
-        return new RotateAction(turretSystem, () -> -joystick.getAxis(JoystickAxis.Z).getAsDouble() * 0.5);
+        return new RotateAction(turretSystem, () -> -joystick.getAxis(JoystickAxis.Z).getAsDouble() * 0.4);
     }
 
     public static Action visionShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, ShooterSystem shooterSystem, TurretSystem turretSystem, VisionSystem visionSystem) {
@@ -33,12 +36,15 @@ public class ActionFactory {
     }
 
     public static Action rotateTurretByVision(TurretSystem turretSystem, VisionSystem visionSystem) {
+        DoubleProperty initialValue = new SimpleDoubleProperty();
+
         return new GenericActionBuilder()
-                .onInitialize(visionSystem::setProcessingMode)
-                .onExecute(() -> turretSystem.rotateTo(() -> 0))
+                .onInitialize(() -> {visionSystem.setProcessingMode(); initialValue.set(turretSystem.currentValue());})
+                .onExecute(() -> turretSystem.rotateTo(() -> initialValue.get() + visionSystem.alignmentError() * 2))
                 .onEnd(() ->  {visionSystem.setNormalMode(); turretSystem.stop();})
                 .runOnEndWhenInterrupted()
-                .build().requires(turretSystem, visionSystem);
+                .build()
+                .requires(turretSystem, visionSystem);
     }
 
     public static Action interpolateShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, ShooterSystem shooterSystem, double distance) {
@@ -46,13 +52,18 @@ public class ActionFactory {
     }
 
     public static Action fullHighShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, ShooterSystem shooterSystem, DoubleSupplier rpm) {
-        return Actions.sequential(
+        return new SequentialActionGroup() {
+            @Override
+            public String toString() {
+                return "the one";
+            }
+        }.add(
                 shooterSystem.roughRotateToAction(rpm.getAsDouble()),
                 Actions.parallel(
                         shooterSystem.keepAtAction(rpm),
                         fullFeedAction(intakeSystem, hopperSystem, feederSystem)
                 )
-        ).requires(shooterSystem, feederSystem, hopperSystem);
+        );
     }
 
     public static Action fullLowShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, ShooterSystem shooterSystem) {

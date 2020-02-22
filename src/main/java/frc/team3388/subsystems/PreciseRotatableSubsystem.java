@@ -57,6 +57,7 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
     }
 
     public void rotateTo(DoubleSupplier target) {
+        System.out.println("target " + target.getAsDouble() + " current " + currentValue());
         rotate(pidController.calculate(currentValue(), target.getAsDouble()));
     }
 
