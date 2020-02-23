@@ -51,7 +51,7 @@ public class ShooterSystem extends PreciseRotatableSubsystem {
 
     public Action lowShootAction() {
         return new GenericActionBuilder()
-                .onExecute(() -> rotate(0.2))
+                .onExecute(() -> rotate(LOW_SHOOT_PERCENTAGE))
                 .onEnd(this::stop)
                 .runOnEndWhenInterrupted()
                 .build();

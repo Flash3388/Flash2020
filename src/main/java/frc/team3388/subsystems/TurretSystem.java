@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.team3388.objects.NetworkDoubleProperty;
 import frc.team3388.objects.SrxEncoder;
 
+import java.util.function.DoubleSupplier;
+
 public class TurretSystem extends PreciseRotatableSubsystem {
     private static final int CONTROLLER_PORT = 3;
     private static final double DEFAULT_MAX_ANGLE = 110;
@@ -37,6 +39,11 @@ public class TurretSystem extends PreciseRotatableSubsystem {
         encoder.reset();
 
         return new TurretSystem(talon, pidController, encoder, DEFAULT_MAX_ANGLE);
+    }
+
+    @Override
+    public void rotateTo(DoubleSupplier target) {
+        super.rotateTo(ExtendedMath.equals(target.getAsDouble(), currentValue(), DEFAULT_DELTA) ? () -> 0 : target);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package frc.team3388.actions;
 
-import com.beans.DoubleProperty;
-import com.beans.properties.SimpleDoubleProperty;
 import com.flash3388.flashlib.frc.robot.hid.Joystick;
 import com.flash3388.flashlib.frc.robot.hid.JoystickAxis;
 import com.flash3388.flashlib.robot.motion.actions.RotateAction;
@@ -9,12 +7,10 @@ import com.flash3388.flashlib.robot.scheduling.Subsystem;
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import com.flash3388.flashlib.robot.scheduling.actions.Actions;
 import com.flash3388.flashlib.robot.scheduling.actions.GenericActionBuilder;
-import com.flash3388.flashlib.robot.scheduling.actions.SequentialActionGroup;
 import com.flash3388.flashlib.robot.systems.drive.actions.TankDriveAction;
 import com.flash3388.flashlib.time.Time;
 import frc.team3388.subsystems.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -38,10 +34,13 @@ public class ActionFactory {
         );
     }
 
+    public static Action rotateTurretUntilVisionTarget(TurretSystem turretSystem, VisionSystem visionSystem) {
+        return onCondition(new RotateAction(turretSystem, () -> 0.25), visionSystem::hasFoundTarget);
+    }
+
     public static Action rotateTurretByVision(TurretSystem turretSystem, VisionSystem visionSystem) {
         return Actions.sequential(
-                Actions.instantAction(visionSystem::setProcessingMode),
-                Actions.wait(Time.milliseconds(20)),
+                enableVisionProcessingMode(visionSystem),
                 new GenericActionBuilder()
                         .onExecute(() -> turretSystem.rotateTo(() -> turretSystem.currentValue() + visionSystem.alignmentError()))
                         .onEnd(() ->  {visionSystem.setNormalMode(); turretSystem.stop();})
@@ -55,12 +54,7 @@ public class ActionFactory {
     }
 
     public static Action fullHighShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, ShooterSystem shooterSystem, DoubleSupplier rpm) {
-        return new SequentialActionGroup() {
-            @Override
-            public String toString() {
-                return "*****big*****";
-            }
-        }.add(
+        return Actions.sequential(
                 shooterSystem.roughRotateToAction(rpm.getAsDouble()),
                 Actions.parallel(
                         shooterSystem.keepAtAction(rpm),
@@ -119,5 +113,12 @@ public class ActionFactory {
                 .runOnEndWhenInterrupted()
                 .build()
                 .requires(requirements);
+    }
+
+    private static Action enableVisionProcessingMode(VisionSystem visionSystem) {
+        return Actions.sequential(
+                Actions.instantAction(visionSystem::setProcessingMode),
+                onCondition(Actions.empty(), visionSystem::hasFoundTarget)
+        ).requires(visionSystem);
     }
 }
