@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 public class ClimbSystem extends ConstantSpeedRotatableSubsystem {
     private static final int FIRST_CONTROLLER_PORT = 0;
     private static final int SECOND_CONTROLLER_PORT = 1;
-    private static final double ROTATE_SPEED = 0.3;
+    private static final double ROTATE_SPEED = 0.5;
 
     public ClimbSystem(SpeedController controller) {
         super(controller, ROTATE_SPEED);

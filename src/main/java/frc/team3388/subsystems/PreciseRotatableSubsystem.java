@@ -5,7 +5,6 @@ import com.flash3388.flashlib.robot.io.devices.actuators.SpeedController;
 import com.flash3388.flashlib.robot.motion.Rotatable;
 import com.flash3388.flashlib.robot.scheduling.Subsystem;
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
-import com.flash3388.flashlib.robot.scheduling.actions.Actions;
 import com.flash3388.flashlib.robot.scheduling.actions.GenericActionBuilder;
 import com.jmath.ExtendedMath;
 import frc.team3388.actions.ActionFactory;
@@ -30,8 +29,8 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
         this.pidController.setOutputLimit(pidLimit);
     }
 
-    public Action roughRotateToAction(double target) {
-        return ActionFactory.onCondition(keepAtAction(() -> target), () -> hasReachedTarget(target)).requires(this);
+    public Action roughRotateToAction(DoubleSupplier target) {
+        return ActionFactory.onCondition(keepAtAction(target), () -> hasReachedTarget(target)).requires(this);
     }
 
     public Action keepAtAction(DoubleSupplier target) {
@@ -48,8 +47,8 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
         pidController.reset();
     }
 
-    public boolean hasReachedTarget(double target) {
-        return ExtendedMath.equals(currentValue(), target, targetRoughness);
+    public boolean hasReachedTarget(DoubleSupplier target) {
+        return ExtendedMath.equals(currentValue(), target.getAsDouble(), targetRoughness);
     }
 
     public double currentValue() {
@@ -57,7 +56,6 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
     }
 
     public void rotateTo(DoubleSupplier target) {
-        System.out.println("target " + target.getAsDouble() + " current " + currentValue());
         rotate(pidController.calculate(currentValue(), target.getAsDouble()));
     }
 

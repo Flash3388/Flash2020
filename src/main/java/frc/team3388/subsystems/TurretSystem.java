@@ -4,22 +4,16 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.flash3388.flashlib.frc.robot.io.devices.actuators.FrcSpeedController;
 import com.flash3388.flashlib.robot.control.PidController;
 import com.jmath.ExtendedMath;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import frc.team3388.objects.NetworkDoubleProperty;
 import frc.team3388.objects.SrxEncoder;
-
-import java.util.function.DoubleSupplier;
 
 public class TurretSystem extends PreciseRotatableSubsystem {
     private static final int CONTROLLER_PORT = 3;
     private static final double DEFAULT_MAX_ANGLE = 110;
     private static final int LARGE_GEAR_TOOTH_COUNT = 110;
     private static final int LITTLE_GEAR_TOOTH_COUNT = 27;
-    private static final double PID_LIMIT = 0.25;
-    private static final double DEFAULT_DELTA = 0.5;
+    private static final double PID_LIMIT = 0.3;
+    private static final double DEFAULT_DELTA = 1;
 
     private final double maxAngle;
 
@@ -30,7 +24,7 @@ public class TurretSystem extends PreciseRotatableSubsystem {
 
     public static TurretSystem forRobot() {
         final double kP = 0.08;
-        final double kD = 0.18;
+        final double kD = 0.19;
 
         PidController pidController = new PidController(kP, 0, kD, 0);
         WPI_TalonSRX talon = new WPI_TalonSRX(CONTROLLER_PORT);
@@ -41,10 +35,10 @@ public class TurretSystem extends PreciseRotatableSubsystem {
         return new TurretSystem(talon, pidController, encoder, DEFAULT_MAX_ANGLE);
     }
 
-    @Override
-    public void rotateTo(DoubleSupplier target) {
-        super.rotateTo(ExtendedMath.equals(target.getAsDouble(), currentValue(), DEFAULT_DELTA) ? () -> 0 : target);
-    }
+//    @Override
+//    public void rotateTo(DoubleSupplier target) {
+//        super.rotateTo(ExtendedMath.equals(target.getAsDouble(), currentValue(), DEFAULT_DELTA) ? () -> 0 :  target);
+//    }
 
     @Override
     public void rotate(double speed) {

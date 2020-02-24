@@ -1,5 +1,7 @@
 package frc.team3388.actions;
 
+import com.beans.DoubleProperty;
+import com.beans.properties.SimpleDoubleProperty;
 import com.flash3388.flashlib.frc.robot.hid.Joystick;
 import com.flash3388.flashlib.frc.robot.hid.JoystickAxis;
 import com.flash3388.flashlib.robot.motion.actions.RotateAction;
@@ -17,36 +19,48 @@ import java.util.function.DoubleSupplier;
 
 public class ActionFactory {
     public static Action manualDriveAction(DriveSystem driveSystem, Joystick right, Joystick left) {
-        return new TankDriveAction(driveSystem, right.getAxis(JoystickAxis.Y), left.getAxis(JoystickAxis.Y));
+        return new TankDriveAction(driveSystem, () -> right.getAxis(JoystickAxis.Y).getAsDouble() * 0.5, () -> left.getAxis(JoystickAxis.Y).getAsDouble() * 0.5);
     }
 
     public static Action manualTurretAction(TurretSystem turretSystem, Joystick joystick) {
         return new RotateAction(turretSystem, () -> joystick.getAxis(JoystickAxis.Z).getAsDouble() * 0.25);
     }
 
-    public static Action visionShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, ShooterSystem shooterSystem, TurretSystem turretSystem, VisionSystem visionSystem) {
+    public static Action visionShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, TurretSystem turretSystem, ShooterSystem shooterSystem, VisionSystem visionSystem) {
         return Actions.sequential(
                 Actions.parallel(
                         rotateTurretByVision(turretSystem, visionSystem),
-                        Actions.wait(Time.seconds(1)),
-                        interpolateShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, visionSystem.distance())
+                        Actions.sequential(
+                                Actions.wait(Time.seconds(1)),
+                                interpolateShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, visionSystem.distance())
+                        )
                 )
-        );
-    }
-
-    public static Action rotateTurretUntilVisionTarget(TurretSystem turretSystem, VisionSystem visionSystem) {
-        return onCondition(new RotateAction(turretSystem, () -> 0.25), visionSystem::hasFoundTarget);
+        ).requires(intakeSystem, hopperSystem, feederSystem, turretSystem, shooterSystem, visionSystem);
     }
 
     public static Action rotateTurretByVision(TurretSystem turretSystem, VisionSystem visionSystem) {
         return Actions.sequential(
                 enableVisionProcessingMode(visionSystem),
                 new GenericActionBuilder()
-                        .onExecute(() -> turretSystem.rotateTo(() -> turretSystem.currentValue() + visionSystem.alignmentError()))
+                        .onExecute(() -> turretSystem.rotateTo(() -> turretSystem.currentValue() + visionSystem.alignmentError() - 0.5))
                         .onEnd(() ->  {visionSystem.setNormalMode(); turretSystem.stop();})
                         .runOnEndWhenInterrupted()
                         .build()
         ).requires(turretSystem, visionSystem);
+    }
+
+    public static Action initiationLineShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, TurretSystem turretSystem, ShooterSystem shooterSystem) {
+        DoubleProperty initialAngle = new SimpleDoubleProperty();
+
+        return Actions.parallel(
+                new GenericActionBuilder()
+                        .onInitialize(() -> initialAngle.set(turretSystem.currentValue()))
+                        .onExecute(() -> turretSystem.rotateTo(initialAngle))
+                        .onEnd(turretSystem::stop)
+                        .runOnEndWhenInterrupted()
+                        .build().requires(turretSystem),
+                interpolateShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, 280)
+        );
     }
 
     public static Action interpolateShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, ShooterSystem shooterSystem, double distance) {
@@ -55,12 +69,13 @@ public class ActionFactory {
 
     public static Action fullHighShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, ShooterSystem shooterSystem, DoubleSupplier rpm) {
         return Actions.sequential(
-                shooterSystem.roughRotateToAction(rpm.getAsDouble()),
+                Actions.instantAction(shooterSystem::resetEncoder),
+                shooterSystem.roughRotateToAction(rpm),
                 Actions.parallel(
                         shooterSystem.keepAtAction(rpm),
                         fullFeedAction(intakeSystem, hopperSystem, feederSystem)
                 )
-        );
+        ).requires(intakeSystem, hopperSystem, feederSystem, shooterSystem);
     }
 
     public static Action fullLowShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, ShooterSystem shooterSystem) {
@@ -77,7 +92,7 @@ public class ActionFactory {
                         fullIntakeAction(intakeSystem, hopperSystem),
                         feederSystem.rotateAction()
                 )
-        ).requires(hopperSystem, feederSystem);
+        ).requires(intakeSystem, hopperSystem, feederSystem);
     }
 
     public static Action fullIntakeAction(IntakeSystem intakeSystem, HopperSystem hopperSystem) {
@@ -115,10 +130,23 @@ public class ActionFactory {
                 .requires(requirements);
     }
 
+    public static Action switchCamAction(VisionSystem visionSystem) {
+        return Actions.instantAction(visionSystem::switchCam);
+    }
+
+    public static Action setTurretCamAction(VisionSystem visionSystem) {
+        return Actions.instantAction(visionSystem::switchToTurretCam).requires(visionSystem);
+    }
+
+    public static Action setFrontCamAction(VisionSystem visionSystem) {
+        return Actions.instantAction(visionSystem::switchToFrontCam).requires(visionSystem);
+    }
+
     private static Action enableVisionProcessingMode(VisionSystem visionSystem) {
         return Actions.sequential(
+                setTurretCamAction(visionSystem),
                 Actions.instantAction(visionSystem::setProcessingMode),
-                onCondition(Actions.empty(), visionSystem::hasFoundTarget)
+                Actions.wait(Time.milliseconds(20))
         ).requires(visionSystem);
     }
 }
