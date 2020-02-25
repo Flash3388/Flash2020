@@ -26,7 +26,7 @@ public class ShooterSystem extends PreciseRotatableSubsystem {
     private final SrxEncoder srxEncoder;
 
     public ShooterSystem(SpeedController firstSpeedController, SpeedController secondSpeedControllerSrxEncoder, SrxEncoder encoderSrx, PidController pidController, Piston lid, Interpolation interpolation) {
-        super(new SpeedControllerGroup(new FrcSpeedController(firstSpeedController), new FrcSpeedController(secondSpeedControllerSrxEncoder)), () -> encoderSrx.getVelocityPerSecond() * 60, pidController, 1, 100);
+        super(new SpeedControllerGroup(new FrcSpeedController(firstSpeedController), new FrcSpeedController(secondSpeedControllerSrxEncoder)), () -> encoderSrx.getVelocityPerSecond() * 60, pidController, 1, 1000);
         this.interpolation = interpolation;
         this.srxEncoder = encoderSrx;
         setOutputLimit(0.95);
@@ -58,7 +58,7 @@ public class ShooterSystem extends PreciseRotatableSubsystem {
     }
 
     public double interpolateRpm(double distance) {
-        return (distance - 270)/15.0 * 50 + 4300;
+        return (distance - 270)/15.0 * 50 + 4250;
     }
 
     public void resetEncoder() {
@@ -66,8 +66,8 @@ public class ShooterSystem extends PreciseRotatableSubsystem {
     }
 
     @Override
-    public Action roughRotateToAction(DoubleSupplier target) {
-        return super.roughRotateToAction(() -> target.getAsDouble() + 900);
+    public void rotateTo(DoubleSupplier target) {
+        super.rotateTo(() -> target.getAsDouble() + 900);
     }
 
     @Override

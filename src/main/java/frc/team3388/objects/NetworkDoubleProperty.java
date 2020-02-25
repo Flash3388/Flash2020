@@ -35,6 +35,6 @@ public class NetworkDoubleProperty implements DoubleProperty {
 
     @Override
     public void set(Double value) {
-
+        entry.setDouble(value);
     }
 }

@@ -30,7 +30,7 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
     }
 
     public Action roughRotateToAction(DoubleSupplier target) {
-        return ActionFactory.onCondition(keepAtAction(target), () -> hasReachedTarget(target)).requires(this);
+        return ActionFactory.onCondition(keepAtAction(target), () -> hasReachedTarget(target));
     }
 
     public Action keepAtAction(DoubleSupplier target) {
@@ -39,8 +39,7 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
                 .onExecute(() -> rotateTo(target))
                 .onEnd(this::stop)
                 .runOnEndWhenInterrupted()
-                .requires(this)
-                .build();
+                .build().requires(this);
     }
 
     public void resetPidController() {
@@ -67,6 +66,7 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
     @Override
     public void stop() {
         controller.stop();
+        controller.set(0);
     }
 
     protected void setOutputLimit(double output) {

@@ -12,7 +12,7 @@ public class AutonomousActionFactory {
         return Actions.sequential(
                 turretSystem.roughRotateToAction(() -> -20),
                 ActionFactory.visionShootAction(intakeSystem, hopperSystem, feederSystem, turretSystem, shooterSystem, visionSystem).setTimeout(Time.seconds(4)),
-                Actions.parallel(
+                ActionFactory.parallel(
                         ActionFactory.fullIntakeAction(intakeSystem, hopperSystem),
                         driveFromInitiationLineToControlPanel(driveSystem, clock)
                 ),

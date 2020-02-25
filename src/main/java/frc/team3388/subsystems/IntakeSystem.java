@@ -11,30 +11,25 @@ public class IntakeSystem extends ConstantSpeedRotatableSubsystem {
     private static final int LEFT_PISTON_REVERSE_CHANNEL = 2;
     private static final double SPEED = 0.4;
 
-    private final Piston rightPiston;
-    private final Piston leftPiston;
+    private final Piston bothPistons;
 
-    public IntakeSystem(WPI_VictorSPX controller, Piston rightPiston, Piston leftPiston) {
+    public IntakeSystem(WPI_VictorSPX controller, Piston bothPistons) {
         super(controller, SPEED);
-        this.rightPiston = rightPiston;
-        this.leftPiston = leftPiston;
+        this.bothPistons = bothPistons;
     }
 
     public static IntakeSystem forRobot() {
         WPI_VictorSPX controller = new WPI_VictorSPX(CONTROLLER_PORT); controller.setInverted(true);
-//        Piston rightPiston = new Piston(RIGHT_PISTON_FORWARD_CHANNEL, RIGHT_PISTON_REVERSE_CHANNEL);
-//        Piston left_Piston = new Piston(LEFT_PISTON_FORWARD_CHANNEL, LEFT_PISTON_REVERSE_CHANNEL);
+        Piston bothPistons = new Piston(4, 5);
 
-        return new IntakeSystem(controller, null, null);
+        return new IntakeSystem(controller, bothPistons);
     }
 
     public void fold() {
-//        leftPiston.close();
-//        rightPiston.close();
+        bothPistons.close();
     }
 
     public void unfold() {
-//        leftPiston.open();
-//        rightPiston.open();
+        bothPistons.open();
     }
 }

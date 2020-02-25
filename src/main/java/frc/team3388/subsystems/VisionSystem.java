@@ -30,27 +30,26 @@ public class VisionSystem extends Subsystem {
 
     public static VisionSystem forRobot() {
         NetworkTableEntry exposureEntry = NetworkTableInstance.getDefault().getTable(CAMERA_CONTROL_TABLE_NAME).getEntry(EXPOSURE_ENTRY_NAME);
-        exposureEntry.setDouble(DEFAULT_EXPOSURE_VALUE);
         NetworkDoubleSupplier alignmentErrorSupplier = new NetworkDoubleSupplier(VISION_TABLE_NAME, ALIGNMENT_ERROR_ENTRY_NAME, 0);
         NetworkDoubleSupplier distanceSupplier = new NetworkDoubleSupplier(VISION_TABLE_NAME, DISTANCE_ENTRY_NAME, -1);
-        NetworkDoubleProperty cameraIndexSupplier = new NetworkDoubleProperty(VISION_TABLE_NAME, CAMERA_INDEX_ENTRY_NAME, 1);
+        NetworkDoubleProperty cameraIndexSupplier = new NetworkDoubleProperty(CAMERA_CONTROL_TABLE_NAME, CAMERA_INDEX_ENTRY_NAME, 0);
 
         return new VisionSystem(exposureEntry, alignmentErrorSupplier, distanceSupplier, cameraIndexSupplier);
     }
 
     public void switchCam() {
         if (cameraIndexProperty.getAsDouble() == 0)
-            switchToTurretCam();
-        else
             switchToFrontCam();
+        else
+            switchToTurretCam();
     }
 
     public void switchToTurretCam() {
-        cameraIndexProperty.setAsDouble(1);
+        cameraIndexProperty.setAsDouble(0);
     }
 
     public void switchToFrontCam() {
-        cameraIndexProperty.setAsDouble(0);
+        cameraIndexProperty.setAsDouble(1);
     }
 
     public void setProcessingMode() {
