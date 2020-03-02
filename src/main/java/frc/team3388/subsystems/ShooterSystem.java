@@ -1,5 +1,6 @@
 package frc.team3388.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.flash3388.flashlib.frc.robot.io.devices.actuators.FrcSpeedController;
@@ -13,23 +14,23 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.team3388.objects.Piston;
 import frc.team3388.objects.SrxEncoder;
+import javafx.beans.property.DoubleProperty;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.DoubleSupplier;
 
 public class ShooterSystem extends PreciseRotatableSubsystem implements Testable {
-    private static final int FIRST_CONTROLLER_PORT = 11;
-    private static final int SECOND_CONTROLLER_PORT = 10;
+    private static final int CONTROLLER_PORT = 10;
     private static final double LOW_SHOOT_PERCENTAGE = 0.25;
 
     private final Interpolation interpolation;
-    private final SrxEncoder srxEncoder;
+    private final WPI_TalonFX controller;
 
-    public ShooterSystem(SpeedController firstSpeedController, SpeedController secondSpeedControllerSrxEncoder, SrxEncoder encoderSrx, PIDController pidController, Interpolation interpolation) {
-        super(new SpeedControllerGroup(new FrcSpeedController(firstSpeedController), new FrcSpeedController(secondSpeedControllerSrxEncoder)), () -> encoderSrx.getVelocityPerSecond() * 60, pidController, 50);
+    public ShooterSystem(WPI_TalonFX controller, DoubleSupplier rpmSupplier, PIDController pidController, Interpolation interpolation) {
+        super(new FrcSpeedController(controller), rpmSupplier, pidController, 10);
         this.interpolation = interpolation;
-        this.srxEncoder = encoderSrx;
+        this.controller = controller;
     }
 
     public static ShooterSystem forRobot() {
@@ -38,14 +39,10 @@ public class ShooterSystem extends PreciseRotatableSubsystem implements Testable
         final double kD = 0.0005 / 3.0;
 
         PIDController pidController = new PIDController(kP, kI, kD);
-        WPI_TalonSRX firstSpeedController = new WPI_TalonSRX(FIRST_CONTROLLER_PORT); firstSpeedController.setInverted(true);
-        WPI_VictorSPX secondSpeedController = new WPI_VictorSPX(SECOND_CONTROLLER_PORT); secondSpeedController.setInverted(true);
-        SrxEncoder encoderSrx = new SrxEncoder(firstSpeedController, -1);
-        encoderSrx.reset();
+        WPI_TalonFX controller = new WPI_TalonFX(CONTROLLER_PORT);
         Interpolation interpolation = LagrangePolynomial.fromMap(dataPoints());
 
-
-        return new ShooterSystem(firstSpeedController, secondSpeedController, encoderSrx, pidController, interpolation);
+        return new ShooterSystem(controller,() -> controller.getSelectedSensorVelocity() / 4096.0 * 600, pidController, interpolation);
     }
 
     public Action lowShootAction() {
@@ -61,7 +58,7 @@ public class ShooterSystem extends PreciseRotatableSubsystem implements Testable
     }
 
     public void resetEncoder() {
-        srxEncoder.reset();
+        controller.setSelectedSensorPosition(0);
     }
 
     @Override
