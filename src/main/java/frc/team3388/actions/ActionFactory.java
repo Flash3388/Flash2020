@@ -10,6 +10,7 @@ import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import com.flash3388.flashlib.robot.scheduling.actions.Actions;
 import com.flash3388.flashlib.robot.scheduling.actions.GenericActionBuilder;
 import com.flash3388.flashlib.robot.systems.drive.actions.TankDriveAction;
+import com.flash3388.flashlib.time.Clock;
 import com.flash3388.flashlib.time.Time;
 import frc.team3388.subsystems.*;
 
@@ -34,7 +35,7 @@ public class ActionFactory {
         return parallel(
                         rotateTurretByVision(turretSystem, visionSystem),
                         Actions.sequential(
-                                Actions.wait(Time.seconds(2)),
+                                Actions.wait(Time.seconds(1.5)),
                                 Actions.instantAction(() -> distance.setAsDouble(visionSystem.distance())),
                                 interpolateShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, distance)
                         ).requires(intakeSystem, hopperSystem, feederSystem, shooterSystem)
@@ -45,7 +46,7 @@ public class ActionFactory {
         return Actions.sequential(
                 enableVisionProcessingMode(visionSystem),
                 new GenericActionBuilder()
-                        .onExecute(() -> turretSystem.rotateTo(() -> turretSystem.currentValue() + visionSystem.alignmentError() - 0.5))
+                        .onExecute(() -> turretSystem.rotateTo(() -> turretSystem.currentValue() + visionSystem.alignmentError()))
                         .onEnd(() ->  {visionSystem.setNormalMode(); turretSystem.stop();})
                         .runOnEndWhenInterrupted()
                         .build().requires(turretSystem, visionSystem)
@@ -67,7 +68,10 @@ public class ActionFactory {
     }
 
     public static Action interpolateShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, ShooterSystem shooterSystem, DoubleSupplier distance) {
-        return fullHighShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, () -> shooterSystem.interpolateRpm(distance.getAsDouble()));
+        return Actions.sequential(
+                Actions.instantAction(hopperSystem::reset),
+                fullHighShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, () -> shooterSystem.interpolateRpm(distance.getAsDouble()))
+        );
     }
 
     public static Action fullHighShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, ShooterSystem shooterSystem, DoubleSupplier rpm) {
@@ -96,6 +100,13 @@ public class ActionFactory {
                         feederSystem.rotateAction()
                 )
         ).requires(intakeSystem, hopperSystem, feederSystem);
+    }
+
+    public static Action fullEatAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, Clock clock) {
+        return parallel(
+                engageIntakeAction(intakeSystem),
+                hopperSystem.eatAction(clock)
+        );
     }
 
     public static Action fullIntakeAction(IntakeSystem intakeSystem, HopperSystem hopperSystem) {

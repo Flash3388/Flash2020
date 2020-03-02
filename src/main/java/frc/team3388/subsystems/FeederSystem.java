@@ -3,9 +3,9 @@ package frc.team3388.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
 
-public class FeederSystem extends ConstantSpeedRotatableSubsystem {
+public class FeederSystem extends ConstantSpeedRotatableSubsystem implements Testable {
     private static final int CONTROLLER_PORT = 9;
-    private static final double SPEED = 0.4;
+    private static final double SPEED = 0.35;
 
     public FeederSystem(SpeedController controller) {
         super(controller, SPEED);

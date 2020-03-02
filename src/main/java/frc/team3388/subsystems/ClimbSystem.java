@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 import java.util.function.BooleanSupplier;
 
-public class ClimbSystem extends ConstantSpeedRotatableSubsystem {
+public class ClimbSystem extends ConstantSpeedRotatableSubsystem implements Testable{
     private static final int FIRST_CONTROLLER_PORT = 0;
     private static final int SECOND_CONTROLLER_PORT = 1;
     private static final int SENSOR_PORT = 0;

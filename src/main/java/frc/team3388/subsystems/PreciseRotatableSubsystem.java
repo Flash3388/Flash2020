@@ -1,36 +1,29 @@
 package frc.team3388.subsystems;
 
-import com.flash3388.flashlib.robot.control.PidController;
 import com.flash3388.flashlib.robot.io.devices.actuators.SpeedController;
 import com.flash3388.flashlib.robot.motion.Rotatable;
 import com.flash3388.flashlib.robot.scheduling.Subsystem;
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import com.flash3388.flashlib.robot.scheduling.actions.GenericActionBuilder;
-import com.jmath.ExtendedMath;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.team3388.actions.ActionFactory;
 
 import java.util.function.DoubleSupplier;
 
-public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
+public class PreciseRotatableSubsystem extends Subsystem implements Rotatable, Testable {
     private final SpeedController controller;
     private final DoubleSupplier valueSupplier;
-    private final PidController pidController;
-    private final double targetRoughness;
+    private final PIDController pidController;
 
-    public PreciseRotatableSubsystem(SpeedController controller, DoubleSupplier valueSupplier, PidController pidController) {
-        this(controller, valueSupplier, pidController, 1, 0);
-    }
-
-    public PreciseRotatableSubsystem(SpeedController controller, DoubleSupplier valueSupplier, PidController pidController, double pidLimit, double targetRoughness) {
+    public PreciseRotatableSubsystem(SpeedController controller, DoubleSupplier valueSupplier, PIDController pidController, double targetTolerance) {
         this.controller = controller;
         this.valueSupplier = valueSupplier;
         this.pidController = pidController;
-        this.targetRoughness = targetRoughness;
-        this.pidController.setOutputLimit(pidLimit);
+        this.pidController.setTolerance(targetTolerance);
     }
 
     public Action roughRotateToAction(DoubleSupplier target) {
-        return ActionFactory.onCondition(keepAtAction(target), () -> hasReachedTarget(target));
+        return ActionFactory.onCondition(keepAtAction(target), pidController::atSetpoint);
     }
 
     public Action keepAtAction(DoubleSupplier target) {
@@ -44,10 +37,6 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
 
     public void resetPidController() {
         pidController.reset();
-    }
-
-    public boolean hasReachedTarget(DoubleSupplier target) {
-        return ExtendedMath.equals(currentValue(), target.getAsDouble(), targetRoughness);
     }
 
     public double currentValue() {
@@ -67,13 +56,5 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable {
     public void stop() {
         controller.stop();
         controller.set(0);
-    }
-
-    protected void setOutputLimit(double output) {
-        pidController.setOutputLimit(output);
-    }
-
-    protected void setMaxOutputRampRate(double rate) {
-        pidController.setOutputRampRate(rate);
     }
 }

@@ -22,7 +22,7 @@ import tracer.controllers.parameters.PidControllerParameters;
 import tracer.following.TankFollower;
 import tracer.motion.MotionState;
 
-public class DriveSystem extends TankDriveSystem implements TankFollower {
+public class DriveSystem extends TankDriveSystem implements TankFollower, Testable{
     private static final int FRONT_RIGHT_CONTROLLER_PORT = 1;
     private static final int REAR_RIGHT_CONTROLLER_PORT = 2;
     private static final int FRONT_LEFT_CONTROLLER_PORT = 5;
@@ -108,12 +108,12 @@ public class DriveSystem extends TankDriveSystem implements TankFollower {
     }
 
     private static  TankTrajectoryControllerFactory createControllerFactory() {
-        final double kP = 0;
+        final double kP = 1;
         final double kI = 0;
         final double kD = 0;
 
         final double kV = 2;
-        final double kA = 2;
+        final double kA = 0;
 
         final double gP = 0.2;
 
