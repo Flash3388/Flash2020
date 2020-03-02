@@ -33,12 +33,12 @@ public class ActionFactory {
         DoubleProperty distance = new SimpleDoubleProperty();
 
         return parallel(
-                        rotateTurretByVision(turretSystem, visionSystem),
-                        Actions.sequential(
-                                Actions.wait(Time.seconds(1.5)),
-                                Actions.instantAction(() -> distance.setAsDouble(visionSystem.distance())),
-                                interpolateShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, distance)
-                        ).requires(intakeSystem, hopperSystem, feederSystem, shooterSystem)
+                rotateTurretByVision(turretSystem, visionSystem),
+                Actions.runnableAction(() -> distance.setAsDouble(visionSystem.hasFoundTarget() ? visionSystem.distance() : distance.getAsDouble())),
+                Actions.sequential(
+                        Actions.wait(Time.seconds(1.5)),
+                        interpolateShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, distance)
+                ).requires(intakeSystem, hopperSystem, feederSystem, shooterSystem)
         ).requires(intakeSystem, hopperSystem, feederSystem, turretSystem, shooterSystem, visionSystem);
     }
 

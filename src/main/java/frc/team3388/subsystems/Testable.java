@@ -5,8 +5,6 @@ import com.beans.properties.SimpleBooleanProperty;
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import com.flash3388.flashlib.robot.scheduling.actions.Actions;
 
-import java.util.List;
-
 public interface Testable {
     default Action tests(BooleanProperty testResult) {
         return Actions.empty();

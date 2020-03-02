@@ -13,7 +13,6 @@ import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import com.flash3388.flashlib.robot.systems.drive.TankDriveSystem;
 import com.flash3388.flashlib.time.Clock;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.team3388.objects.SrxEncoder;
 import tracer.actions.TankFollowerAction;
 import tracer.controllers.factories.TankTrajectoryControllerFactory;

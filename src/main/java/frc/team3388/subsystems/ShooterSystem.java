@@ -1,20 +1,12 @@
 package frc.team3388.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.flash3388.flashlib.frc.robot.io.devices.actuators.FrcSpeedController;
-import com.flash3388.flashlib.robot.control.PidController;
-import com.flash3388.flashlib.robot.io.devices.actuators.SpeedControllerGroup;
 import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import com.flash3388.flashlib.robot.scheduling.actions.GenericActionBuilder;
 import com.jmath.interpolation.Interpolation;
 import com.jmath.interpolation.LagrangePolynomial;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
-import frc.team3388.objects.Piston;
-import frc.team3388.objects.SrxEncoder;
-import javafx.beans.property.DoubleProperty;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,6 +59,8 @@ public class ShooterSystem extends PreciseRotatableSubsystem implements Testable
     }
 
     private static Map<Double, Double> dataPoints() {
-        return new HashMap<>();
+        HashMap<Double, Double> interpolationPoints = new HashMap<>();
+
+        return interpolationPoints;
     }
 }
