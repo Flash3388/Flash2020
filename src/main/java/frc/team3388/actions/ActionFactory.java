@@ -35,7 +35,8 @@ public class ActionFactory {
 
         return parallel(
                 Actions.sequential(
-                        turretSystem.roughRotateToAction(() -> initialPositionSupplier.get().value()),
+                        enableVisionProcessingMode(visionSystem),
+                        turretSystem.roughRotateToAction(() -> visionSystem.hasFoundTarget() ? turretSystem.currentValue() : initialPositionSupplier.get().value()),
                         rotateTurretByVision(turretSystem, visionSystem)
                 ),
                 Actions.sequential(
