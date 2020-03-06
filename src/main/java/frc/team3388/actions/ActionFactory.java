@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 public class ActionFactory {
     public static Action manualDriveAction(DriveSystem driveSystem, Joystick right, Joystick left) {
@@ -29,13 +30,16 @@ public class ActionFactory {
         return new RotateAction(turretSystem, () -> joystick.getAxis(JoystickAxis.Z).getAsDouble() * 0.25).requires(turretSystem);
     }
 
-    public static Action visionShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, TurretSystem turretSystem, ShooterSystem shooterSystem, VisionSystem visionSystem) {
+    public static Action visionShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, TurretSystem turretSystem, ShooterSystem shooterSystem, VisionSystem visionSystem, Supplier<TurretPosition> initialPositionSupplier) {
         DoubleProperty distance = new SimpleDoubleProperty();
 
         return parallel(
-                rotateTurretByVision(turretSystem, visionSystem),
                 Actions.sequential(
-                        Actions.wait(Time.seconds(1.5)),
+                        turretSystem.roughRotateToAction(() -> initialPositionSupplier.get().value()),
+                        rotateTurretByVision(turretSystem, visionSystem)
+                ),
+                Actions.sequential(
+                        Actions.wait(Time.seconds(1)),
                         Actions.instantAction(() -> distance.setAsDouble(visionSystem.distance())),
                         interpolateShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, distance)
                 ).requires(intakeSystem, hopperSystem, feederSystem, shooterSystem)
