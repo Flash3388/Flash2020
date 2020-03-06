@@ -7,7 +7,7 @@ public class IntakeSystem extends ConstantSpeedRotatableSubsystem implements Tes
     private static final int CONTROLLER_PORT = 0;
     private static final int PISTONS_FORWARD_CHANNEL = 4;
     private static final int PISTONS_REVERSE_CHANNEL = 5;
-    private static final double SPEED = 0.4;
+    private static final double SPEED = 0.6;
 
     private final Piston bothPistons;
 

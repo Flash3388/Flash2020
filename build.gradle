@@ -46,10 +46,7 @@ repositories {
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 4.
 dependencies {
-    compile ('com.flash3388.flashlib:flashlib-frc:2020.1.0') {
-        exclude group: 'com.flash3388.util', module: 'jmath'
-    }
-    compile "com.github.tomtzook:jmath:1.1.0"
+    compile ('com.flash3388.flashlib:flashlib-frc:2020.1.0')
     implementation 'com.flash3388.tracer:tracerj:1.0.0-beta.13'
 
     implementation wpi.deps.wpilib()

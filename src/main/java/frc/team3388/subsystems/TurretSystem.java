@@ -2,9 +2,9 @@ package frc.team3388.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.flash3388.flashlib.frc.robot.io.devices.actuators.FrcSpeedController;
+import com.flash3388.flashlib.robot.control.PidController;
 import com.jmath.ExtendedMath;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.team3388.objects.SrxEncoder;
 
 public class TurretSystem extends PreciseRotatableSubsystem implements Testable {
@@ -17,7 +17,7 @@ public class TurretSystem extends PreciseRotatableSubsystem implements Testable 
 
     private final double maxAngle;
 
-    public TurretSystem(SpeedController controller, PIDController pidController, SrxEncoder encoder, double maxAngle) {
+    public TurretSystem(SpeedController controller, PidController pidController, SrxEncoder encoder, double maxAngle) {
         super(new FrcSpeedController(controller), encoder, pidController, DEFAULT_DELTA);
         this.maxAngle = maxAngle;
     }
@@ -26,7 +26,7 @@ public class TurretSystem extends PreciseRotatableSubsystem implements Testable 
         final double kP = 0.08;
         final double kD = 0.19;
 
-        PIDController pidController = new PIDController(kP, 0, kD);
+        PidController pidController = new PidController(kP, 0, kD, 0);
         WPI_TalonSRX talon = new WPI_TalonSRX(CONTROLLER_PORT);
         talon.setInverted(true);
         SrxEncoder encoder = new SrxEncoder(talon, LITTLE_GEAR_TOOTH_COUNT / (double) LARGE_GEAR_TOOTH_COUNT * 360);

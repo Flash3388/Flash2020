@@ -34,9 +34,9 @@ public class ActionFactory {
 
         return parallel(
                 rotateTurretByVision(turretSystem, visionSystem),
-                Actions.runnableAction(() -> distance.setAsDouble(visionSystem.hasFoundTarget() ? visionSystem.distance() : distance.getAsDouble())),
                 Actions.sequential(
                         Actions.wait(Time.seconds(1.5)),
+                        Actions.instantAction(() -> distance.setAsDouble(visionSystem.distance())),
                         interpolateShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, distance)
                 ).requires(intakeSystem, hopperSystem, feederSystem, shooterSystem)
         ).requires(intakeSystem, hopperSystem, feederSystem, turretSystem, shooterSystem, visionSystem);
@@ -63,7 +63,7 @@ public class ActionFactory {
                         .onEnd(turretSystem::stop)
                         .runOnEndWhenInterrupted()
                         .build().requires(turretSystem),
-                interpolateShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, () ->280)
+                interpolateShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, () -> 300)
         );
     }
 
@@ -79,7 +79,7 @@ public class ActionFactory {
                 Actions.instantAction(shooterSystem::resetEncoder),
                 shooterSystem.roughRotateToAction(rpm),
                 parallel(
-                    shooterSystem.keepAtAction(rpm),
+                        shooterSystem.keepAtAction(rpm),
                         fullFeedAction(intakeSystem, hopperSystem, feederSystem)
                 )
         ).requires(intakeSystem, hopperSystem, feederSystem, shooterSystem);

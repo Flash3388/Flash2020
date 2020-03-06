@@ -48,7 +48,6 @@ public class RotateTurretUntilSolidTargetAction extends Action {
 
     @Override
     protected boolean isFinished() {
-        System.out.println(clock.currentTime().sub(startTimeInTarget));
         return startTimeInTarget.after(Time.milliseconds(0)) && clock.currentTime().sub(startTimeInTarget).largerThanOrEquals(TIME_REQUIRED_FOR_SOLID_TARGET);
     }
 }

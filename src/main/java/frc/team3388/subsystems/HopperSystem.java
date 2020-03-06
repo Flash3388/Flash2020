@@ -10,7 +10,6 @@ import com.flash3388.flashlib.robot.scheduling.actions.GenericActionBuilder;
 import com.flash3388.flashlib.time.Clock;
 import com.flash3388.flashlib.time.Time;
 import com.revrobotics.ColorSensorV3;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SpeedController;
 
@@ -18,21 +17,16 @@ import java.util.function.BooleanSupplier;
 
 public class HopperSystem extends ConstantSpeedRotatableSubsystem implements Testable {
     private static final int CONTROLLER_PORT = 8;
-    private static final double SPEED = 0.8;
+    private static final double SPEED = 0.95;
     private final BooleanSupplier isInIntake;
     private int counter;
     private final ColorSensorV3 sensor;
 
     public HopperSystem(SpeedController controller) {
         super(controller, SPEED);
-        DigitalInput input = new DigitalInput(1);
         sensor = new ColorSensorV3(I2C.Port.kOnboard);
         isInIntake = () -> sensor.getProximity() >= 160;
 
-    }
-
-    public int proximity() {
-        return sensor.getProximity();
     }
 
     public static HopperSystem forRobot() {
@@ -51,7 +45,7 @@ public class HopperSystem extends ConstantSpeedRotatableSubsystem implements Tes
         return new GenericActionBuilder()
                 .onInitialize(() -> hasAdded.setAsBoolean(false))
                 .onExecute(() -> {
-                    if(isInIntake.getAsBoolean() && counter <= 3) {
+                    if(isInIntake.getAsBoolean() && counter <= 4) {
                         if(!hasAdded.getAsBoolean()) {
                             counter++;
                             hasAdded.setAsBoolean(true);
@@ -61,7 +55,7 @@ public class HopperSystem extends ConstantSpeedRotatableSubsystem implements Tes
                     }
 
                     else {
-                        if(counter <= 3 && hasAdded.getAsBoolean() && (clock.currentTime().sub(collectedTime.get()).before(Time.milliseconds(200)) || collectedTime.get().equals(Time.seconds(0)))) {
+                        if(counter <= 3 && hasAdded.getAsBoolean() && (clock.currentTime().sub(collectedTime.get()).before(Time.milliseconds(20)) || collectedTime.get().equals(Time.seconds(0)))) {
                             if(collectedTime.get().lessThanOrEquals(Time.seconds(0)))
                                 collectedTime.set(clock.currentTime());
                             rotate();
