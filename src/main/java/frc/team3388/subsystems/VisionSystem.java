@@ -13,8 +13,8 @@ public class VisionSystem extends Subsystem {
     private static final String ALIGNMENT_ERROR_ENTRY_NAME = "angle_degrees";
     private static final String DISTANCE_ENTRY_NAME = "distance_cm";
     private static final String CAMERA_INDEX_ENTRY_NAME = "camera";
-    private static final int PROCESSING_EXPOSURE_VALUE = 18;
-    private static final int DEFAULT_EXPOSURE_VALUE = 46;
+    private static final int PROCESSING_EXPOSURE_VALUE = 2;
+    private static final int DEFAULT_EXPOSURE_VALUE = 20;
 
     private final NetworkTableEntry exposureEntry;
     private final NetworkDoubleSupplier alignmentErrorSupplier;

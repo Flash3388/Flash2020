@@ -33,17 +33,20 @@ public class ActionFactory {
     public static Action visionShootAction(IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, TurretSystem turretSystem, ShooterSystem shooterSystem, VisionSystem visionSystem, Supplier<TurretPosition> initialPositionSupplier) {
         DoubleProperty distance = new SimpleDoubleProperty();
 
-        return parallel(
-                Actions.sequential(
-                        enableVisionProcessingMode(visionSystem),
-                        turretSystem.roughRotateToAction(() -> visionSystem.hasFoundTarget() ? turretSystem.currentValue() : initialPositionSupplier.get().value()),
-                        rotateTurretByVision(turretSystem, visionSystem)
-                ),
-                Actions.sequential(
-                        Actions.wait(Time.seconds(1)),
-                        Actions.instantAction(() -> distance.setAsDouble(visionSystem.distance())),
-                        interpolateShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, distance)
-                ).requires(intakeSystem, hopperSystem, feederSystem, shooterSystem)
+        return Actions.sequential(
+                enableVisionProcessingMode(visionSystem),
+                Actions.wait(Time.milliseconds(100)),
+                        Actions.sequential(
+                                turretSystem.roughRotateToAction(() -> visionSystem.hasFoundTarget() ? turretSystem.currentValue() : initialPositionSupplier.get().value()),
+                                rotateTurretByVision(turretSystem, visionSystem).setTimeout(Time.seconds(1)),
+                                Actions.wait(Time.milliseconds(200)),
+                                Actions.instantAction(() -> System.out.println(visionSystem.distance() + " " + shooterSystem.interpolateRpm(distance.getAsDouble()))),
+                                Actions.instantAction(() -> distance.setAsDouble(visionSystem.distance())),
+                                parallel(
+                                        rotateTurretByVision(turretSystem, visionSystem),
+                                        interpolateShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem, distance)
+                                )
+                        )
         ).requires(intakeSystem, hopperSystem, feederSystem, turretSystem, shooterSystem, visionSystem);
     }
 
@@ -52,7 +55,7 @@ public class ActionFactory {
                 enableVisionProcessingMode(visionSystem),
                 new GenericActionBuilder()
                         .onExecute(() -> turretSystem.rotateTo(() -> turretSystem.currentValue() + visionSystem.alignmentError()))
-                        .onEnd(() ->  {visionSystem.setNormalMode(); turretSystem.stop();})
+                        .onEnd(turretSystem::stop)
                         .runOnEndWhenInterrupted()
                         .build().requires(turretSystem, visionSystem)
         ).requires(turretSystem, visionSystem);
@@ -136,7 +139,7 @@ public class ActionFactory {
         return Actions.instantAction(intakeSystem::fold).requires(intakeSystem);
     }
 
-    public static Action onCondition(Action action, BooleanSupplier condition) {
+    public static Action until(Action action, BooleanSupplier condition) {
         Collection<Subsystem> requirements = action.getRequirements();
         action.resetRequirements();
 

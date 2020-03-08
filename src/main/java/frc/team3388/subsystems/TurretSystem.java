@@ -3,9 +3,13 @@ package frc.team3388.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.flash3388.flashlib.frc.robot.io.devices.actuators.FrcSpeedController;
 import com.flash3388.flashlib.robot.control.PidController;
+import com.flash3388.flashlib.robot.scheduling.actions.Action;
 import com.jmath.ExtendedMath;
 import edu.wpi.first.wpilibj.SpeedController;
+import frc.team3388.actions.ActionFactory;
 import frc.team3388.objects.SrxEncoder;
+
+import java.util.function.DoubleSupplier;
 
 public class TurretSystem extends PreciseRotatableSubsystem implements Testable {
     private static final int CONTROLLER_PORT = 3;

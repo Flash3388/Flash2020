@@ -25,7 +25,7 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable, T
     }
 
     public Action roughRotateToAction(DoubleSupplier target) {
-        return ActionFactory.onCondition(keepAtAction(target), () -> hasReachedTarget(target));
+        return ActionFactory.until(keepAtAction(target), () -> hasReachedTarget(target));
     }
 
     public Action keepAtAction(DoubleSupplier target) {
@@ -50,7 +50,7 @@ public class PreciseRotatableSubsystem extends Subsystem implements Rotatable, T
     }
 
     public boolean hasReachedTarget(DoubleSupplier target) {
-        return ExtendedMath.constrained(target.getAsDouble(), target.getAsDouble()-targetTolerance, target.getAsDouble()+targetTolerance);
+        return ExtendedMath.equals(target.getAsDouble(), currentValue(), targetTolerance);
     }
 
     @Override

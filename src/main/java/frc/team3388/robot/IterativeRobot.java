@@ -16,6 +16,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.team3388.actions.ActionFactory;
 import frc.team3388.actions.AutonomousActionFactory;
 import frc.team3388.actions.TurretPosition;
+import frc.team3388.objects.NetworkDoubleSupplier;
 import frc.team3388.subsystems.*;
 
 import java.util.Arrays;
@@ -30,6 +31,7 @@ public class IterativeRobot implements IterativeRobotInterface {
 
     public IterativeRobot(Robot robot) {
         SimpleProperty<TurretPosition> initialPositionProperty = new SimpleProperty<>();
+        initialPositionProperty.set(TurretPosition.FRONT);
         DriveSystem driveSystem = DriveSystem.forRobot();
         IntakeSystem intakeSystem = IntakeSystem.forRobot();
         HopperSystem hopperSystem = HopperSystem.forRobot();
@@ -48,7 +50,7 @@ public class IterativeRobot implements IterativeRobotInterface {
         Joystick left = new Joystick(2);
 
         driveSystem.setDefaultAction(ActionFactory.manualDriveAction(driveSystem, right, left));
-        turretSystem.setDefaultAction(ActionFactory.manualTurretAction(turretSystem, systemController));
+//        turretSystem.setDefaultAction(ActionFactory.manualTurretAction(turretSystem, systemController));
 
         left.getButton(0).whileHeld(ActionFactory.fullLowShootAction(intakeSystem, hopperSystem, feederSystem, shooterSystem));
         left.getButton(1).whenPressed(Actions.instantAction(robot.getScheduler()::stopAllActions));
@@ -62,7 +64,7 @@ public class IterativeRobot implements IterativeRobotInterface {
         systemController.getButton(3).whileHeld(climbSystem.rotateAction());
 
         setupTurretControl(initialPositionProperty, systemController);
-        right.getButton(0).whileHeld(ActionFactory.visionShootAction(intakeSystem, hopperSystem, feederSystem, turretSystem, shooterSystem, visionSystem, initialPositionProperty));
+//        right.getButton(0).whileHeld(ActionFactory.visionShootAction(intakeSystem, hopperSystem, feederSystem, turretSystem, shooterSystem, visionSystem, initialPositionProperty));
     }
 
     @Override
@@ -122,10 +124,10 @@ public class IterativeRobot implements IterativeRobotInterface {
     private static void setupTurretControl(SimpleProperty<TurretPosition> initialPositionProperty, Joystick controller) {
         Map<Integer, TurretPosition> povToTurretPositionMap = new HashMap<>();
         povToTurretPositionMap.put(0, TurretPosition.FRONT);
-        povToTurretPositionMap.put(1, TurretPosition.RIGHT);
-        povToTurretPositionMap.put(3, TurretPosition.LEFT);
-        Trigger povTrigger = new Trigger();
-        povTrigger.whenActive(Actions.instantAction(() -> initialPositionProperty.set(povToTurretPositionMap.get(controller.getPov(0).getAsInt()))));
-        povTrigger.setState(TriggerState.ACTIVE);
+        povToTurretPositionMap.put(90, TurretPosition.RIGHT);
+        povToTurretPositionMap.put(270, TurretPosition.LEFT);
+
+        Actions.conditional(() -> povToTurretPositionMap.containsKey(controller.getPov(0).getAsInt()), Actions.instantAction(() -> initialPositionProperty.set(povToTurretPositionMap.get(controller.getPov(0).getAsInt()))));
+//        povTrigger.addToScheduler(() -> controller.getPov(0).getAsInt() != -1 && !initialPositionProperty.get().equals(povToTurretPositionMap.get(controller.getPov(0).getAsInt())));
     }
 }

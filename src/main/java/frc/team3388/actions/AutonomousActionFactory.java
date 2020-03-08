@@ -9,15 +9,16 @@ import frc.team3388.subsystems.*;
 
 public class AutonomousActionFactory {
     public static Action rightSideAutonomous(DriveSystem driveSystem, IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, TurretSystem turretSystem, ShooterSystem shooterSystem, VisionSystem visionSystem, Clock clock) {
+        Action driveAction = driveFromInitiationLineToControlPanel(driveSystem, clock);
+
         return Actions.sequential(
-                turretSystem.roughRotateToAction(() -> 0),
-                ActionFactory.visionShootAction(intakeSystem, hopperSystem, feederSystem, turretSystem, shooterSystem, visionSystem).setTimeout(Time.seconds(4)),
+                ActionFactory.visionShootAction(intakeSystem, hopperSystem, feederSystem, turretSystem, shooterSystem, visionSystem, () -> TurretPosition.FRONT).setTimeout(Time.seconds(4)),
                 ActionFactory.parallel(
-                        ActionFactory.fullIntakeAction(intakeSystem, hopperSystem),
-                        driveFromInitiationLineToControlPanel(driveSystem, clock)
+                        driveAction,
+                        ActionFactory.until(ActionFactory.fullIntakeAction(intakeSystem, hopperSystem), () -> !driveAction.isRunning())
                 ),
-                driveFromControlPanelToInitiationLine(driveSystem, clock),
-                ActionFactory.visionShootAction(intakeSystem, hopperSystem, feederSystem, turretSystem, shooterSystem, visionSystem).setTimeout(Time.seconds(3))
+//                driveFromControlPanelToInitiationLine(driveSystem, clock),
+                ActionFactory.visionShootAction(intakeSystem, hopperSystem, feederSystem, turretSystem, shooterSystem, visionSystem, () -> TurretPosition.FRONT).setTimeout(Time.seconds(3))
         ).requires(intakeSystem, hopperSystem, feederSystem, turretSystem, shooterSystem, visionSystem);
     }
 
@@ -31,8 +32,7 @@ public class AutonomousActionFactory {
 
     public static Action genericAuto(DriveSystem driveSystem, IntakeSystem intakeSystem, HopperSystem hopperSystem, FeederSystem feederSystem, TurretSystem turretSystem, ShooterSystem shooterSystem, VisionSystem visionSystem, Clock clock) {
         return Actions.sequential(
-                turretSystem.roughRotateToAction(() -> 0),
-                ActionFactory.visionShootAction(intakeSystem, hopperSystem, feederSystem, turretSystem, shooterSystem, visionSystem).setTimeout(Time.seconds(6.5)),
+                ActionFactory.visionShootAction(intakeSystem, hopperSystem, feederSystem, turretSystem, shooterSystem, visionSystem, () -> TurretPosition.FRONT).setTimeout(Time.seconds(6.5)),
                 Actions.periodic(() -> driveSystem.move(0.35), Time.seconds(3)).requires(driveSystem)
 //                driveBackwardsTwoMeters(driveSystem, clock)
         );
